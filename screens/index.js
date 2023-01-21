@@ -6,12 +6,12 @@ import {
   useWindowDimensions,
   TextInput,
   TouchableOpacity,
+  Platform,
 } from "react-native";
 import { useTailwind } from "tailwind-rn";
 import { faker } from "@faker-js/faker";
-import { Platform } from "react-native";
-import { RestaurantCard } from "../components/cards";
 import PageContainer from "../components/pageContainer";
+import { RestaurantCard } from "../components/cards";
 
 const getBreakPoint = (width) => {
   const breakPoints = { sm: 640, md: 768, lg: 1024, xl: 1280 };
