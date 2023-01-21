@@ -1,0 +1,23 @@
+name: cheaper-eater-frontend
+
+on:
+    push:
+        branches: ["main"]
+    pull_request:
+        branches: ["main"]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Use Node.js 19.X
+              uses: actions/setup-node@v3
+              with:
+                  node-version: "19.X"
+                  cache: "npm"
+            - run: npm ci
+            - run: npx eslint . --ext .mjs,.js,.jsx,.ts,.tsx,.json
+            - run: npm run build:tailwind
+            - run: npm run web
+            #- run: npm test
