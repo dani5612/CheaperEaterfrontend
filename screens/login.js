@@ -4,7 +4,7 @@ import { useTailwind } from "tailwind-rn";
 import { IconInput } from "../components/inputs";
 import { RoundButton } from "../components/buttons";
 
-const Login = ({ children }) => {
+const Login = () => {
   const tailwind = useTailwind();
   return (
     <View style={tailwind("flex flex-1 sm:items-center")}>
@@ -45,7 +45,7 @@ const Login = ({ children }) => {
           <RoundButton style={tailwind("bg-green-500 mb-2")} title="login" />
           <View style={tailwind("flex flex-row justify-center")}>
             <Text style={tailwind("text-lg font-bold mb-4 mr-1")}>
-              don't have an account?
+              {"don't have an account?"}
             </Text>
 
             <TouchableOpacity>

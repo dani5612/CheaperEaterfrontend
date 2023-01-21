@@ -3,7 +3,7 @@ import { useTailwind } from "tailwind-rn";
 import { IconInput } from "../components/inputs";
 import { RoundButton } from "../components/buttons";
 
-const AccountRecovery = ({ children }) => {
+const AccountRecovery = () => {
   const tailwind = useTailwind();
   return (
     <View style={tailwind("flex flex-1 sm:items-center")}>

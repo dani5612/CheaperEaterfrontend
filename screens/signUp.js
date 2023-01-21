@@ -4,7 +4,7 @@ import { useTailwind } from "tailwind-rn";
 import { IconInput } from "../components/inputs";
 import { RoundButton } from "../components/buttons";
 
-const SignUp = ({ children }) => {
+const SignUp = () => {
   const tailwind = useTailwind();
   return (
     <View style={tailwind("flex flex-1 sm:items-center")}>
