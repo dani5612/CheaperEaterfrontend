@@ -9,8 +9,7 @@
     "web": "expo start --web",
     "build:tailwind": "tailwindcss --input input.css --output tailwind.css --no-autoprefixer && tailwind-rn",
     "dev:tailwind": "concurrently \"tailwindcss --input input.css --output tailwind.css --no-autoprefixer --watch\" \"tailwind-rn --watch\"",
-    "lint": "eslint . --ext .mjs,.js,.jsx,.ts,.tsx,.json",
-    "postinstall": "npx expo install react-native-web@~0.18.7 react-dom@18.0.0 @expo/webpack-config@^0.17.0"
+    "lint": "eslint . --ext .mjs,.js,.jsx,.ts,.tsx,.json"
   },
   "dependencies": {
     "@expo/webpack-config": "^0.17.0",
