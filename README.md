@@ -10,8 +10,6 @@
     - `git https://github.com/cheaper-eater/frontend.git`
 5. Build and run:
     - in your command line, navigate to the project directory you cloned
-    - once in your projectory navigate to `cheaper-eater`
-    - install project dependencies: `npm install`
-    - install web support dependencies: `npx expo install react-native-web@~0.18.7 react-dom@18.0.0 @expo/webpack-config@^0.17.0`
-    - build tailwind css classes: `npm run build:tailwind`
-    - run with `npm run web`
+    - in your command line, run `npm install` to install all of the project dependencies
+    - in your command line, run `npm run build:tailwind` to build the project's talwind classes
+    - run with `npm run web|ios|android` where `web|ios|android` is the platform you want to run the app on
