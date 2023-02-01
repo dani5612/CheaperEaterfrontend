@@ -10,8 +10,10 @@ import {
 } from "react-native";
 import { useTailwind } from "tailwind-rn";
 import { faker } from "@faker-js/faker";
+import { useEffect, useState } from "react";
 import PageContainer from "../components/pageContainer";
 import { RestaurantCard } from "../components/cards";
+import ModalView from "../components/modal";
 
 const getBreakPoint = (width) => {
   const breakPoints = { sm: 640, md: 768, lg: 1024, xl: 1280 };
@@ -26,6 +28,20 @@ const getBreakPoint = (width) => {
 };
 
 const MenuList = () => {
+  if (JSON.parse(localStorage.getItem("address") === null)) {
+    localStorage.setItem(
+      "address",
+      JSON.stringify({ address: { address1: "Set Location" } })
+    );
+  }
+  const tailwind = useTailwind();
+  const numColumns = { sm: 2, lg: 4, xl: 4 };
+  const window = useWindowDimensions();
+  const [visible, setVisible] = useState(false);
+  const [address, getAddress] = useState(
+    JSON.parse(localStorage.getItem("address"))
+  );
+  const [searchQuery, setSearchQuery] = useState("");
   let FOOD_TYPE = [
     {
       id: 0,
@@ -69,11 +85,31 @@ const MenuList = () => {
     });
   }
 
-  const tailwind = useTailwind();
-  const numColumns = { sm: 2, lg: 4, xl: 4 };
-  const window = useWindowDimensions();
+  useEffect(() => {
+    if (address.address.address1 != "Set Location") {
+      fetch("http://localhost:8000/api/search", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          query: searchQuery,
+        }),
+      })
+        .then((response) => response.json())
+        .then((response) => console.log(response))
+        .catch((err) => console.error(err));
+    }
+  }, [searchQuery]);
+
   return (
-    <PageContainer>
+    <PageContainer style={tailwind("m-2")}>
+      <ModalView
+        visible={visible}
+        setVisible={setVisible}
+        setAddress={getAddress}
+      />
       <View style={tailwind("flex flex-row justify-between")}>
         <View>
           <Text style={tailwind("text-3xl font-bold")}>Delivery 🥘</Text>
@@ -84,15 +120,18 @@ const MenuList = () => {
           source={{ uri: faker.image.avatar() }}
         />
       </View>
-
-      <View style={tailwind("flex flex-row items-center")}>
-        <Image
-          style={tailwind("w-4 h-4")}
-          resizeMode="contain"
-          source={require("../assets/icons/black/location.png")}
-        />
-        <Text style={tailwind("font-light ml-2")}>{faker.address.city()}</Text>
-      </View>
+      <TouchableOpacity onPress={() => setVisible(true)}>
+        <View style={tailwind("flex flex-row rounded-full items-center")}>
+          <Image
+            style={tailwind("w-4 h-4")}
+            resizeMode="contain"
+            source={require("../assets/icons/black/location.png")}
+          />
+          <Text style={tailwind("font-light ml-2")}>
+            {address.address.address1}
+          </Text>
+        </View>
+      </TouchableOpacity>
 
       <View style={tailwind("flex flex-row items-center")}>
         <Image
@@ -108,6 +147,13 @@ const MenuList = () => {
             borderLeftWidth: 1,
             padding: 10,
             width: Platform.OS === "web" ? window.width / 2 : window.width,
+          }}
+          onChange={(e) => {
+            if (address.address.address1 === "Set Location") {
+              setVisible(true);
+            } else {
+              setSearchQuery(e.target.value);
+            }
           }}
         ></TextInput>
       </View>
