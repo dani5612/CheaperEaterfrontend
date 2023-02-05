@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   View,
   Text,
@@ -7,9 +6,11 @@ import {
   StyleSheet,
 } from "react-native";
 import { useTailwind } from "tailwind-rn";
+import {isMobile} from 'react-device-detect';
+import { inherits } from "util";
 
 const FoodTypes = ({ closeFoodTypes }) => {
-  const [foodCategories] = useState([
+  const foodCategories = [
     { key: "Asian", logo: "🍜" },
     { key: "Mexican", logo: "🌮" },
     { key: "Italian", logo: "🍝" },
@@ -27,7 +28,7 @@ const FoodTypes = ({ closeFoodTypes }) => {
     { key: "Bowls", logo: "🍚" },
     { key: "Mediterranean", logo: "🥙" },
     { key: "Steak", logo: "🥩" },
-  ]);
+  ];
   const openCategory = (item) => {
     console.log(item);
     closeFoodTypes();
@@ -37,28 +38,17 @@ const FoodTypes = ({ closeFoodTypes }) => {
   return (
     <View style={tailwind("flex flex-1")}>
       <View
-        style={tailwind(
-          "flex flex-1 justify-between sm:justify-center sm:w-1/2 md:w-1/3 xl:w-1/5"
-        )}
+        // style={tailwind(
+        //   "flex flex-1 justify-between sm:justify-center sm:w-1/2 md:w-1/3 xl:w-1/5"
+        // )}
       >
-        {/* LOGO */}
-        {/* <Image
-          source={require("../assets/logos/logo.png")}
-          style={{ width: 200, height: 200, alignSelf: "center" }}
-        /> */}
-
-        {/* SEARCH BAR */}
-        {/* <TextInput
-          placeholder="What are you craving today?"
-          style={styles.searchBar}
-        /> */}
 
         {/* LIST OF CATEGORIES */}
 
         <View style={styles.container}>
           <Text
             style={{
-              fontSize: 24,
+              fontSize: 20,
               fontWeight: "bold",
               margin: 5,
               marginBottom: 20,
@@ -67,14 +57,17 @@ const FoodTypes = ({ closeFoodTypes }) => {
             Categories
           </Text>
           <FlatList
+            numColumns={isMobile ? 0 : 4}
             data={foodCategories}
             keyExtractor={(item) => item.key}
             renderItem={({ item }) => (
               <TouchableOpacity
-                style={styles.catContainer}
+                
+                style={  isMobile ? styles.catContainer : styles.webVerCatContainer  }
+                
                 onPress={() => openCategory(item.key)}
               >
-                <Text style={styles.item}>
+                <Text style={isMobile ? styles.item : styles. webVerItem}>
                   {item.logo} {item.key}
                 </Text>
               </TouchableOpacity>
@@ -87,6 +80,7 @@ const FoodTypes = ({ closeFoodTypes }) => {
 };
 const styles = StyleSheet.create({
   container: {
+    
     width: "100%",
     paddingTop: 22,
     alignContent: "flex-start",
@@ -95,11 +89,20 @@ const styles = StyleSheet.create({
   },
   item: {
     fontSize: 20,
+    
   },
+  webVerItem: {
+
+    fontSize: 15,
+    //width:"25%",
+    minHeight:30
+
+  }, 
   catContainer: {
     padding: 15,
     paddingVertical: 20,
     paddingLeft: 20,
+    
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -109,9 +112,31 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
 
     elevation: 5,
-    margin: 5,
+    margin: ".5%",
     flex: 1,
     borderRadius: 5,
+  },
+  webVerCatContainer: {
+    maxWidth: "24%",
+    padding: 15,
+    paddingVertical: 20,
+    paddingLeft: 20,
+    
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+
+    elevation: 5,
+    margin: ".5%",
+    flex: 1,
+    borderRadius: 5,
+
+
+
   },
 
   //SEARCH

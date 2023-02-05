@@ -9,15 +9,13 @@ import Index from "./screens/index";
 // import SignUp from "./screens/signUp";
 // import AccountRecovery from "./screens/accountRecovery";
 // import DbTest from "./screens/dbTest";
-import FoodTypes from "./screens/foodTypes";
 
 export default function App() {
   return (
     <TailwindProvider utilities={utilities}>
       <Base>
         {/* <Login /> */}
-        {/* <Index /> */}
-        <FoodTypes />
+        <Index />
         {/* <ListView /> */}
         {/* <SignUp/> */}
         {/* <AccountRecovery/> */}

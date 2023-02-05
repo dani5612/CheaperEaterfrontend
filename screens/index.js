@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -7,11 +8,12 @@ import {
   TextInput,
   TouchableOpacity,
   Platform,
-  TouchableWithoutFeedback,
+  
+  
 } from "react-native";
 import { useTailwind } from "tailwind-rn";
 import { faker } from "@faker-js/faker";
-import { useEffect, useState } from "react";
+
 import PageContainer from "../components/pageContainer";
 import { RestaurantCard } from "../components/cards";
 import ModalView from "../components/modal";
@@ -114,16 +116,10 @@ const MenuList = () => {
           setVisible={setVisible}
           setAddress={getAddress}
         />
-      <TouchableWithoutFeedback
-        onPress={
-          foodTypeScreen == false
-            ? console.log("Food type screen is hidden")
-            : showFoodTypeScreen(false)
-        }
-      >
+
         
 
-        <View>
+  
           <View style={tailwind("flex flex-row justify-between")}>
             <View>
               <Text style={tailwind("text-3xl font-bold")}>Delivery 🥘</Text>
@@ -149,14 +145,29 @@ const MenuList = () => {
           </TouchableOpacity>
 
           <View style={tailwind("flex flex-row items-center")}>
+            {!foodTypeScreen ? (
             <Image
               style={tailwind("w-5 h-5")}
               resizeMode="contain"
               source={require("../assets/icons/black/search.png")}
             />
+
+              
+
+            ) : ( 
+              <TouchableOpacity onPress={() => showFoodTypeScreen(false)}>
+                <Image
+                  style={tailwind("w-5 h-5")}
+                  resizeMode="contain"
+                  source={require("../assets/icons/black/back.png")}
+                  />
+            </TouchableOpacity>
+            )
+            }
+
             <TextInput
               placeholder="What would you like to eat?"
-              onFocus={() => setTimeout(() => showFoodTypeScreen(true), 100)}
+              onFocus={() => showFoodTypeScreen(true)}
               style={{
                 height: 40,
                 margin: 12,
@@ -173,11 +184,14 @@ const MenuList = () => {
               }}
             ></TextInput>
           </View>
-
+          
           {/* Here */}
           {foodTypeScreen ? (
             <View>
               <FoodTypes closeFoodTypes={() => showFoodTypeScreen(false)} />
+              {/* Aqui dejando el food course cuz it needs tobe at the button #lmao */}
+              
+
             </View>
           ) : (
             <View>
@@ -265,8 +279,7 @@ const MenuList = () => {
               />
             </View>
           )}
-        </View>
-      </TouchableWithoutFeedback>
+      
     </PageContainer>
   );
 };
