@@ -6,8 +6,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { useTailwind } from "tailwind-rn";
-import {isMobile} from 'react-device-detect';
-import { inherits } from "util";
+import { isMobile } from "react-device-detect";
 
 const FoodTypes = ({ closeFoodTypes }) => {
   const foodCategories = [
@@ -38,11 +37,10 @@ const FoodTypes = ({ closeFoodTypes }) => {
   return (
     <View style={tailwind("flex flex-1")}>
       <View
-        // style={tailwind(
-        //   "flex flex-1 justify-between sm:justify-center sm:w-1/2 md:w-1/3 xl:w-1/5"
-        // )}
+      // style={tailwind(
+      //   "flex flex-1 justify-between sm:justify-center sm:w-1/2 md:w-1/3 xl:w-1/5"
+      // )}
       >
-
         {/* LIST OF CATEGORIES */}
 
         <View style={styles.container}>
@@ -62,12 +60,12 @@ const FoodTypes = ({ closeFoodTypes }) => {
             keyExtractor={(item) => item.key}
             renderItem={({ item }) => (
               <TouchableOpacity
-                
-                style={  isMobile ? styles.catContainer : styles.webVerCatContainer  }
-                
+                style={
+                  isMobile ? styles.catContainer : styles.webVerCatContainer
+                }
                 onPress={() => openCategory(item.key)}
               >
-                <Text style={isMobile ? styles.item : styles. webVerItem}>
+                <Text style={isMobile ? styles.item : styles.webVerItem}>
                   {item.logo} {item.key}
                 </Text>
               </TouchableOpacity>
@@ -80,7 +78,6 @@ const FoodTypes = ({ closeFoodTypes }) => {
 };
 const styles = StyleSheet.create({
   container: {
-    
     width: "100%",
     paddingTop: 22,
     alignContent: "flex-start",
@@ -89,20 +86,17 @@ const styles = StyleSheet.create({
   },
   item: {
     fontSize: 20,
-    
   },
   webVerItem: {
-
     fontSize: 15,
     //width:"25%",
-    minHeight:30
-
-  }, 
+    minHeight: 30,
+  },
   catContainer: {
     padding: 15,
     paddingVertical: 20,
     paddingLeft: 20,
-    
+
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -121,7 +115,7 @@ const styles = StyleSheet.create({
     padding: 15,
     paddingVertical: 20,
     paddingLeft: 20,
-    
+
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -134,9 +128,6 @@ const styles = StyleSheet.create({
     margin: ".5%",
     flex: 1,
     borderRadius: 5,
-
-
-
   },
 
   //SEARCH
