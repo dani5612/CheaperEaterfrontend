@@ -29,10 +29,16 @@ const DBDemo = () => {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ data: e.target.value }),
+            body: JSON.stringify({
+              data: {
+                storuuid: "kusdkds-jhbsdjkhbsd-jhvasdjhvsd",
+                storename: "Mayank's Store",
+                review: e.target.value,
+              },
+            }),
           };
 
-          fetch("http://localhost:8000/api/db/add", options)
+          fetch("http://localhost:8000/api/db/addReview", options)
             .then((res) => res.json())
             .then((data) => setDbInsert(data.message))
             .catch((err) => console.error(err));
