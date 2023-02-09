@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import PageContainer from "../components/pageContainer";
 import { RestaurantCard } from "../components/cards";
 import ModalView from "../components/modal";
+import FoodTypes from "./foodTypes";
 
 const getBreakPoint = (width) => {
   const breakPoints = { sm: 640, md: 768, lg: 1024, xl: 1280 };
@@ -72,6 +73,8 @@ const MenuList = () => {
     }
   }, [searchQuery]);
 
+  const [foodTypeScreen, showFoodTypeScreen] = useState(false);
+
   return (
     <PageContainer style={tailwind("m-2")}>
       {address.address.address1 === "Set Location" ? (
@@ -121,13 +124,24 @@ const MenuList = () => {
           </TouchableOpacity>
 
           <View style={tailwind("flex flex-row items-center")}>
-            <Image
-              style={tailwind("w-5 h-5")}
-              resizeMode="contain"
-              source={require("../assets/icons/black/search.png")}
-            />
+            {!foodTypeScreen ? (
+              <Image
+                style={tailwind("w-5 h-5")}
+                resizeMode="contain"
+                source={require("../assets/icons/black/search.png")}
+              />
+            ) : (
+              <TouchableOpacity onPress={() => showFoodTypeScreen(false)}>
+                <Image
+                  style={tailwind("w-5 h-5")}
+                  resizeMode="contain"
+                  source={require("../assets/icons/black/back.png")}
+                />
+              </TouchableOpacity>
+            )}
             <TextInput
               placeholder="What would you like to eat?"
+              onFocus={() => showFoodTypeScreen(true)}
               style={{
                 height: 40,
                 margin: 12,
@@ -144,44 +158,55 @@ const MenuList = () => {
               }}
             ></TextInput>
           </View>
+          {/* Here */}
+          {foodTypeScreen ? (
+            <View>
+              <FoodTypes closeFoodTypes={() => showFoodTypeScreen(false)} />
+              {/* Aqui dejando el food course cuz it needs tobe at the button #lmao */}
+            </View>
+          ) : (
+            <View>
+              <View
+                style={[
+                  tailwind("flex flex-row justify-between"),
+                  {
+                    alignItems: "center",
+                    alignContent: "center",
+                    paddingBottom: 15,
+                  },
+                ]}
+              >
+                <Text style={[tailwind("text-2xl font-bold")]}>
+                  Main Course
+                </Text>
 
-          <View
-            style={[
-              tailwind("flex flex-row justify-between"),
-              {
-                alignItems: "center",
-                alignContent: "center",
-                paddingBottom: 15,
-              },
-            ]}
-          >
-            <Text style={[tailwind("text-2xl font-bold")]}>Main Course</Text>
+                <TouchableOpacity>
+                  <Text style={[tailwind("font-bold text-orange-500")]}>
+                    See All
+                  </Text>
+                </TouchableOpacity>
+              </View>
 
-            <TouchableOpacity>
-              <Text style={[tailwind("font-bold text-orange-500")]}>
-                See All
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          <FlatList
-            data={RestaurantArray}
-            renderItem={({ item }) => {
-              return (
-                <View style={[tailwind("flex flex-1 ")]}>
-                  <RestaurantCard
-                    style={tailwind("m-2")}
-                    title={item.title}
-                    image={item.image}
-                    rating={(Math.random() * (5 - 1) + 1).toFixed(1)}
-                  />
-                </View>
-              );
-            }}
-            key={getBreakPoint(window.width)}
-            numColumns={numColumns[getBreakPoint(window.width)]}
-            keyExtractor={(item) => item.id}
-          />
+              <FlatList
+                data={RestaurantArray}
+                renderItem={({ item }) => {
+                  return (
+                    <View style={[tailwind("flex flex-1 ")]}>
+                      <RestaurantCard
+                        style={tailwind("m-2")}
+                        title={item.title}
+                        image={item.image}
+                        rating={(Math.random() * (5 - 1) + 1).toFixed(1)}
+                      />
+                    </View>
+                  );
+                }}
+                key={getBreakPoint(window.width)}
+                numColumns={numColumns[getBreakPoint(window.width)]}
+                keyExtractor={(item) => item.id}
+              />
+            </View>
+          )}
         </>
       )}
     </PageContainer>
