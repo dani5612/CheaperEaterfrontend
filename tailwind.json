@@ -127,6 +127,11 @@
 			"width": 36
 		}
 	},
+	"w-max": {
+		"style": {
+			"width": "max-content"
+		}
+	},
 	"w-4": {
 		"style": {
 			"width": 16
@@ -280,12 +285,6 @@
 		"style": {
 			"fontSize": 24,
 			"lineHeight": 32
-		}
-	},
-	"text-base": {
-		"style": {
-			"fontSize": 16,
-			"lineHeight": 24
 		}
 	},
 	"font-bold": {

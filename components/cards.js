@@ -45,6 +45,7 @@ const ListViewCard = ({
   );
 };
 
+//Mayank Tamakuwala's Part start here
 const RestaurantCard = ({ title, image, style, rating }) => {
   const tailwind = useTailwind();
   return (
@@ -75,5 +76,5 @@ const RestaurantCard = ({ title, image, style, rating }) => {
     </TouchableOpacity>
   );
 };
-
+//Mayank Tamakuwala's Part ends here
 export { ListViewCard, RestaurantCard };

@@ -1,4 +1,5 @@
-/* eslint-disable no-unused-vars */
+//The whole file if Mayank Tamakuwala's work till the date 11th February, 2023
+//Mayank Tamakuwala's Part starts here
 import { useEffect, useState } from "react";
 import {
   FlatList,
@@ -13,7 +14,13 @@ import {
 } from "react-native";
 import { useTailwind } from "tailwind-rn";
 
-const ModalView = ({ visible, children, setVisible, setAddress }) => {
+const ModalView = ({
+  visible,
+  children,
+  setVisible,
+  setAddress,
+  setPopularRestaurants,
+}) => {
   const tailwind = useTailwind();
   const window = useWindowDimensions();
   const [addressInput, setAddressInput] = useState("");
@@ -99,27 +106,41 @@ const ModalView = ({ visible, children, setVisible, setAddress }) => {
             data={addressArray}
             renderItem={({ item, index }) => (
               <TouchableOpacity
-                onPress={() => {
-                  fetch("http://localhost:8000/api/detail/location", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(addressArray[index]),
-                  })
-                    .then((res) => res.json())
-                    .then((json) => {
-                      [
-                        setAddress(json),
-                        localStorage.setItem("address", JSON.stringify(json)),
-                        fetch("http://localhost:8000/api/set/location", {
-                          credentials: "include",
-                          method: "POST",
-                          headers: { "Content-Type": "application/json" },
-                          body: JSON.stringify(json),
-                        }).catch((err) => console.error("error:" + err)),
-                      ];
-                    })
-                    .catch((err) => console.error("error:" + err));
+                // Logic on onPress() fetch calls suggested by Alfredo Sequeida
+                onPress={async () => {
+                  const detailData = await fetch(
+                    "http://localhost:8000/api/detail/location",
+                    {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify(addressArray[index]),
+                    }
+                  );
+                  const detailjson = await detailData.json();
+                  setAddress(detailjson);
+                  localStorage.setItem("address", JSON.stringify(detailjson)),
+                    await fetch("http://localhost:8000/api/set/location", {
+                      credentials: "include",
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify(detailjson),
+                    });
+
+                  const results = await fetch(
+                    "http://localhost:8000/api/search",
+                    {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      credentials: "include",
+                      body: JSON.stringify({
+                        query: "",
+                      }),
+                    }
+                  );
                   setVisible(false);
+                  setPopularRestaurants(await results.json());
                 }}
               >
                 <View
@@ -144,3 +165,4 @@ const ModalView = ({ visible, children, setVisible, setAddress }) => {
 };
 
 export default ModalView;
+//Mayank Tamakuwala's Part ends here

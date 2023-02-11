@@ -1,3 +1,4 @@
+//Mayank Tamakuwala's Part starts here
 import {
   Text,
   View,
@@ -11,12 +12,16 @@ import {
 } from "react-native";
 import { useTailwind } from "tailwind-rn";
 import { faker } from "@faker-js/faker";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import PageContainer from "../components/pageContainer";
 import { RestaurantCard } from "../components/cards";
 import ModalView from "../components/modal";
+//Mayank Tamakuwala's Part ends here
+// Victor Mendez's Part start here
 import FoodTypes from "./foodTypes";
+// Victor Mendez's Part ends here
 
+//Mayank Tamakuwala's Part starts here
 const getBreakPoint = (width) => {
   const breakPoints = { sm: 640, md: 768, lg: 1024, xl: 1280 };
   if (width <= breakPoints.sm) {
@@ -29,7 +34,7 @@ const getBreakPoint = (width) => {
   }
 };
 
-const MenuList = () => {
+const Index = () => {
   if (JSON.parse(localStorage.getItem("address") === null)) {
     localStorage.setItem(
       "address",
@@ -44,6 +49,11 @@ const MenuList = () => {
     JSON.parse(localStorage.getItem("address"))
   );
   const [searchQuery, setSearchQuery] = useState("");
+  const [popularRestaurants, setPopularRestaurants] = useState([
+    { service: "postmates", stores: [] },
+    { service: "grubhub", stores: [] },
+    { service: "doordash", stores: [] },
+  ]);
 
   let RestaurantArray = [];
 
@@ -54,27 +64,13 @@ const MenuList = () => {
       image: faker.image.food(),
     });
   }
+  //Mayank Tamakuwala's Part ends here
 
-  useEffect(() => {
-    if (address.address.address1 != "Set Location") {
-      fetch("http://localhost:8000/api/search", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          query: searchQuery,
-        }),
-      })
-        .then((response) => response.json())
-        .then((response) => console.log(response))
-        .catch((err) => console.error(err));
-    }
-  }, [searchQuery]);
-
+  //Victor Mendez's Part starts here
   const [foodTypeScreen, showFoodTypeScreen] = useState(false);
+  //Victor Mendez's Part ends here
 
+  //Mayank Tamakuwala's Part starts here
   return (
     <PageContainer style={tailwind("m-2")}>
       {address.address.address1 === "Set Location" ? (
@@ -90,6 +86,7 @@ const MenuList = () => {
               visible={true}
               setVisible={setVisible}
               setAddress={getAddress}
+              setPopularRestaurants={setPopularRestaurants}
             />
           </ImageBackground>
         </>
@@ -99,6 +96,7 @@ const MenuList = () => {
             visible={visible}
             setVisible={setVisible}
             setAddress={getAddress}
+            setSearch={setPopularRestaurants}
           />
           <View style={tailwind("flex flex-row justify-between")}>
             <View>
@@ -110,7 +108,10 @@ const MenuList = () => {
               source={{ uri: faker.image.avatar() }}
             />
           </View>
-          <TouchableOpacity onPress={() => setVisible(true)}>
+          <TouchableOpacity
+            onPress={() => setVisible(true)}
+            style={tailwind("w-max")}
+          >
             <View style={tailwind("flex flex-row rounded-full items-center")}>
               <Image
                 style={tailwind("w-4 h-4")}
@@ -122,7 +123,9 @@ const MenuList = () => {
               </Text>
             </View>
           </TouchableOpacity>
+          {/* Mayank Tamakuwala's Part ends here */}
 
+          {/* Victor Mendez's Part starts here */}
           <View style={tailwind("flex flex-row items-center")}>
             {!foodTypeScreen ? (
               <Image
@@ -139,6 +142,9 @@ const MenuList = () => {
                 />
               </TouchableOpacity>
             )}
+            {/* Victor Mendez's Part ends here */}
+
+            {/* Mayank Tamakuwala's Part starts here */}
             <TextInput
               placeholder="What would you like to eat?"
               onFocus={() => showFoodTypeScreen(true)}
@@ -158,13 +164,17 @@ const MenuList = () => {
               }}
             ></TextInput>
           </View>
-          {/* Here */}
+          {/* Mayank Tamakuwala's Part ends here */}
+
+          {/* Victor Mendez's Part starts here */}
           {foodTypeScreen ? (
             <View>
               <FoodTypes closeFoodTypes={() => showFoodTypeScreen(false)} />
-              {/* Aqui dejando el food course cuz it needs tobe at the button #lmao */}
             </View>
           ) : (
+            //Victor Mendez's Part ends here
+
+            // Mayank Tamakuwala's Part starts here
             <View>
               <View
                 style={[
@@ -186,25 +196,33 @@ const MenuList = () => {
                   </Text>
                 </TouchableOpacity>
               </View>
-
-              <FlatList
-                data={RestaurantArray}
-                renderItem={({ item }) => {
-                  return (
-                    <View style={[tailwind("flex flex-1 ")]}>
-                      <RestaurantCard
-                        style={tailwind("m-2")}
-                        title={item.title}
-                        image={item.image}
-                        rating={(Math.random() * (5 - 1) + 1).toFixed(1)}
-                      />
-                    </View>
-                  );
-                }}
-                key={getBreakPoint(window.width)}
-                numColumns={numColumns[getBreakPoint(window.width)]}
-                keyExtractor={(item) => item.id}
-              />
+              {popularRestaurants[0].stores.length != 0 ? (
+                <FlatList
+                  data={popularRestaurants[0].stores}
+                  renderItem={({ item }) => {
+                    return (
+                      <View style={[tailwind("flex flex-1 ")]}>
+                        <RestaurantCard
+                          style={tailwind("m-2")}
+                          title={item.title}
+                          image={item.image}
+                          // rating={(Math.random() * (5 - 1) + 1).toFixed(1)}
+                          rating={
+                            item.rating === null
+                              ? "No Ratings Found"
+                              : item.rating.toFixed(1)
+                          }
+                        />
+                      </View>
+                    );
+                  }}
+                  key={getBreakPoint(window.width)}
+                  numColumns={numColumns[getBreakPoint(window.width)]}
+                  keyExtractor={(item) => item.id}
+                />
+              ) : (
+                <></>
+              )}
             </View>
           )}
         </>
@@ -213,4 +231,5 @@ const MenuList = () => {
   );
 };
 
-export default MenuList;
+export default Index;
+//Mayank Tamakuwala's Part ends here
