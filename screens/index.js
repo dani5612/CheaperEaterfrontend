@@ -36,6 +36,7 @@ const getBreakPoint = (width) => {
 };
 
 const Index = () => {
+  //saving location details to to the local storage of the website
   if (JSON.parse(localStorage.getItem("address") === null)) {
     localStorage.setItem(
       "address",
@@ -74,6 +75,7 @@ const Index = () => {
   //Mayank Tamakuwala's Part starts here
   return (
     <PageContainer style={tailwind("m-2")}>
+      {/* Runs for the first time when the location hasn't been set by the cookies*/}
       {address.address.address1 === "Set Location" ? (
         <>
           <ImageBackground
@@ -110,6 +112,7 @@ const Index = () => {
             />
           </View>
           <TouchableOpacity
+            // Shows up the modal for the location setup when clicked on the location button
             onPress={() => setVisible(true)}
             style={tailwind("w-max")}
           >
@@ -197,6 +200,7 @@ const Index = () => {
                   </Text>
                 </TouchableOpacity>
               </View>
+              {/* Shows the popular restaurants in the area when the location is selected */}
               {popularRestaurants[0].stores.length != 0 ? (
                 <FlatList
                   data={popularRestaurants[0].stores}
@@ -207,7 +211,6 @@ const Index = () => {
                           style={tailwind("m-2")}
                           title={item.title}
                           image={item.image}
-                          // rating={(Math.random() * (5 - 1) + 1).toFixed(1)}
                           rating={
                             item.rating === null
                               ? "No Ratings Found"

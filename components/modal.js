@@ -16,7 +16,6 @@ import { useTailwind } from "tailwind-rn";
 
 const ModalView = ({
   visible,
-  children,
   setVisible,
   setAddress,
   setPopularRestaurants,
@@ -26,6 +25,7 @@ const ModalView = ({
   const [addressInput, setAddressInput] = useState("");
   const [addressArray, setAddressArray] = useState([]);
 
+  // Fetch call to the backend to get the autocomplete location
   useEffect(() => {
     fetch("http://localhost:8000/api/autocomplete/location", {
       method: "POST",
@@ -107,6 +107,7 @@ const ModalView = ({
             renderItem={({ item, index }) => (
               <TouchableOpacity
                 // Logic on onPress() fetch calls suggested by Alfredo Sequeida
+                // All the fetch calls for getting the selected address details and then stting up the cookies and fetching popular restaurants
                 onPress={async () => {
                   const detailData = await fetch(
                     "http://localhost:8000/api/detail/location",
@@ -157,7 +158,6 @@ const ModalView = ({
             )}
             keyExtractor={(item) => item.id}
           />
-          {children}
         </View>
       </View>
     </Modal>
