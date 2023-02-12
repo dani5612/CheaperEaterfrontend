@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 //Mayank Tamakuwala's Part starts here
 import {
   Text,
