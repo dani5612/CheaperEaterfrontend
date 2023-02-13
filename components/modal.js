@@ -128,7 +128,7 @@ const ModalView = ({
                     });
 
                   const results = await fetch(
-                    "http://localhost:8000/api/search",
+                    "http://localhost:8000/api/popularPicks",
                     {
                       method: "POST",
                       headers: {

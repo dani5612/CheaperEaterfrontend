@@ -18,9 +18,8 @@ import PageContainer from "../components/pageContainer";
 import { RestaurantCard } from "../components/cards";
 import ModalView from "../components/modal";
 //Mayank Tamakuwala's Part ends here
-// Victor Mendez's Part start here
+
 import FoodTypes from "./foodTypes";
-// Victor Mendez's Part ends here
 
 //Mayank Tamakuwala's Part starts here
 const getBreakPoint = (width) => {
@@ -68,9 +67,7 @@ const Index = () => {
   }
   //Mayank Tamakuwala's Part ends here
 
-  //Victor Mendez's Part starts here
   const [foodTypeScreen, showFoodTypeScreen] = useState(false);
-  //Victor Mendez's Part ends here
 
   //Mayank Tamakuwala's Part starts here
   return (
@@ -99,11 +96,13 @@ const Index = () => {
             visible={visible}
             setVisible={setVisible}
             setAddress={getAddress}
-            setSearch={setPopularRestaurants}
+            setPopularRestaurants={setPopularRestaurants}
           />
           <View style={tailwind("flex flex-row justify-between")}>
             <View>
-              <Text style={tailwind("text-3xl font-bold")}>Delivery 🥘</Text>
+              <Text style={tailwind("text-3xl font-bold")}>
+                Hey!! How are you doing? 🥘
+              </Text>
             </View>
             <Image
               style={[tailwind("w-9 h-9"), { borderRadius: 20 }]}
@@ -129,7 +128,6 @@ const Index = () => {
           </TouchableOpacity>
           {/* Mayank Tamakuwala's Part ends here */}
 
-          {/* Victor Mendez's Part starts here */}
           <View style={tailwind("flex flex-row items-center")}>
             {!foodTypeScreen ? (
               <Image
@@ -146,7 +144,6 @@ const Index = () => {
                 />
               </TouchableOpacity>
             )}
-            {/* Victor Mendez's Part ends here */}
 
             {/* Mayank Tamakuwala's Part starts here */}
             <TextInput
@@ -170,14 +167,11 @@ const Index = () => {
           </View>
           {/* Mayank Tamakuwala's Part ends here */}
 
-          {/* Victor Mendez's Part starts here */}
           {foodTypeScreen ? (
             <View>
               <FoodTypes closeFoodTypes={() => showFoodTypeScreen(false)} />
             </View>
           ) : (
-            //Victor Mendez's Part ends here
-
             // Mayank Tamakuwala's Part starts here
             <View>
               <View
