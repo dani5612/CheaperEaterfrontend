@@ -95,11 +95,19 @@ const MenuList = () => {
         </>
       ) : (
         <>
+          {/* <View
+            style={{
+              backgroundColor: "white",
+              position: "absolute",
+              width: "100%",
+            }}
+          > */}
           <ModalView
             visible={visible}
             setVisible={setVisible}
             setAddress={getAddress}
           />
+
           <View style={tailwind("flex flex-row justify-between")}>
             <View>
               <Text style={tailwind("text-3xl font-bold")}>Delivery 🥘</Text>
@@ -140,6 +148,9 @@ const MenuList = () => {
               </TouchableOpacity>
             )}
             <TextInput
+              onBlur={() => {
+                showFoodTypeScreen(false);
+              }}
               placeholder="What would you like to eat?"
               onFocus={() => showFoodTypeScreen(true)}
               style={{
@@ -158,6 +169,7 @@ const MenuList = () => {
               }}
             ></TextInput>
           </View>
+          {/* </View> */}
           {/* Here */}
           {foodTypeScreen ? (
             <View>

@@ -5,8 +5,11 @@ const ListViewCard = ({
   title,
   image,
   rating,
+  serviceFee,
+  foodPrice,
   deliveryFee,
   deliveryTime,
+  totalPrice,
   style,
 }) => {
   const tailwind = useTailwind();
@@ -37,8 +40,11 @@ const ListViewCard = ({
             "flex w-full flex-row justify-between pt-2 font-bold"
           )}
         >
-          <Text>${deliveryFee} delivery fee</Text>
-          <Text>{deliveryTime}</Text>
+          <Text>Item price ${foodPrice} </Text>
+          <Text>Service fee ${serviceFee} </Text>
+          <Text>Delivery fee ${deliveryFee} </Text>
+          <Text>Total price ${totalPrice} </Text>
+          <Text>Delivery Time {deliveryTime}</Text>
         </View>
       </View>
     </View>

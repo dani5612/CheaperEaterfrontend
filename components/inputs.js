@@ -7,6 +7,7 @@ const IconInput = ({
   style,
   keyboardType = "default",
   secureTextEntry = false,
+  onChange,
 }) => {
   const tailwind = useTailwind();
   return (
@@ -26,6 +27,7 @@ const IconInput = ({
         placeholder={placeholder}
         keyboardType={keyboardType}
         secureTextEntry={secureTextEntry}
+        onChange={(e) => onChange(e.target.value)}
       />
     </View>
   );
