@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-//Mayank Tamakuwala's Part starts here
 import {
   Text,
   View,
@@ -17,11 +16,9 @@ import { useState } from "react";
 import PageContainer from "../components/pageContainer";
 import { RestaurantCard } from "../components/cards";
 import ModalView from "../components/modal";
-//Mayank Tamakuwala's Part ends here
 
 import FoodTypes from "./foodTypes";
 
-//Mayank Tamakuwala's Part starts here
 const getBreakPoint = (width) => {
   const breakPoints = { sm: 640, md: 768, lg: 1024, xl: 1280 };
   if (width <= breakPoints.sm) {
@@ -50,31 +47,17 @@ const Index = () => {
     JSON.parse(localStorage.getItem("address"))
   );
   const [searchQuery, setSearchQuery] = useState("");
-  const [popularRestaurants, setPopularRestaurants] = useState([
-    { service: "postmates", stores: [] },
-    { service: "grubhub", stores: [] },
-    { service: "doordash", stores: [] },
-  ]);
-
-  let RestaurantArray = [];
-
-  for (let i = 0; i < 11; i++) {
-    RestaurantArray.push({
-      title: faker.company.name(),
-      id: i,
-      image: faker.image.food(),
-    });
-  }
-  //Mayank Tamakuwala's Part ends here
+  const [popularRestaurants, setPopularRestaurants] = useState({ stores: [] });
 
   const [foodTypeScreen, showFoodTypeScreen] = useState(false);
 
-  //Mayank Tamakuwala's Part starts here
   return (
     <PageContainer style={tailwind("m-2")}>
       {/* Runs for the first time when the location hasn't been set by the cookies*/}
+      {console.log("Point 1")}
       {address.address.address1 === "Set Location" ? (
         <>
+          {console.log("Point 2")}
           <ImageBackground
             style={{
               flex: 1,
@@ -126,7 +109,6 @@ const Index = () => {
               </Text>
             </View>
           </TouchableOpacity>
-          {/* Mayank Tamakuwala's Part ends here */}
 
           <View style={tailwind("flex flex-row items-center")}>
             {!foodTypeScreen ? (
@@ -145,7 +127,6 @@ const Index = () => {
               </TouchableOpacity>
             )}
 
-            {/* Mayank Tamakuwala's Part starts here */}
             <TextInput
               placeholder="What would you like to eat?"
               onFocus={() => showFoodTypeScreen(true)}
@@ -157,22 +138,16 @@ const Index = () => {
                 width: Platform.OS === "web" ? window.width / 2 : window.width,
               }}
               onChange={(e) => {
-                if (address.address.address1 === "Set Location") {
-                  setVisible(true);
-                } else {
-                  setSearchQuery(e.target.value);
-                }
+                setSearchQuery(e.target.value);
               }}
             ></TextInput>
           </View>
-          {/* Mayank Tamakuwala's Part ends here */}
 
           {foodTypeScreen ? (
             <View>
               <FoodTypes closeFoodTypes={() => showFoodTypeScreen(false)} />
             </View>
           ) : (
-            // Mayank Tamakuwala's Part starts here
             <View>
               <View
                 style={[
@@ -195,9 +170,9 @@ const Index = () => {
                 </TouchableOpacity>
               </View>
               {/* Shows the popular restaurants in the area when the location is selected */}
-              {popularRestaurants[0].stores.length != 0 ? (
+              {popularRestaurants.stores.length != 0 ? (
                 <FlatList
-                  data={popularRestaurants[0].stores}
+                  data={popularRestaurants.stores}
                   renderItem={({ item }) => {
                     return (
                       <View style={[tailwind("flex flex-1 ")]}>
@@ -210,6 +185,9 @@ const Index = () => {
                               ? "No Ratings Found"
                               : item.rating.toFixed(1)
                           }
+                          onPress={() => {
+                            console.log(item.title);
+                          }}
                         />
                       </View>
                     );
@@ -230,4 +208,3 @@ const Index = () => {
 };
 
 export default Index;
-//Mayank Tamakuwala's Part ends here

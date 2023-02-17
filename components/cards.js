@@ -46,11 +46,14 @@ const ListViewCard = ({
 };
 
 //Mayank Tamakuwala's Part start here
-const RestaurantCard = ({ title, image, style, rating }) => {
+const RestaurantCard = ({ title, image, style, rating, onPress }) => {
   const tailwind = useTailwind();
   return (
     <TouchableOpacity
       style={[tailwind("bg-white rounded-xl min-h-[300px]"), style]}
+      onPress={() => {
+        onPress();
+      }}
     >
       <View
         style={tailwind(

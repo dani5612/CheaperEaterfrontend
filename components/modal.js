@@ -1,5 +1,3 @@
-//The whole file if Mayank Tamakuwala's work till the date 11th February, 2023
-//Mayank Tamakuwala's Part starts here
 import { useEffect, useState } from "react";
 import {
   FlatList,
@@ -13,6 +11,10 @@ import {
   View,
 } from "react-native";
 import { useTailwind } from "tailwind-rn";
+import { autocomplete } from "../api/autocomplete";
+import { detailLocation } from "../api/detail";
+import { setLocation } from "../api/set";
+import { popularPicks } from "../api/get";
 
 const ModalView = ({
   visible,
@@ -27,14 +29,7 @@ const ModalView = ({
 
   // Fetch call to the backend to get the autocomplete location
   useEffect(() => {
-    fetch("http://localhost:8000/api/autocomplete/location", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: addressInput }),
-    })
-      .then((res) => res.json())
-      .then((json) => setAddressArray(json))
-      .catch((err) => console.error("error:" + err));
+    autocomplete(addressInput).then((x) => setAddressArray(x));
   }, [addressInput]);
 
   return (
@@ -109,39 +104,13 @@ const ModalView = ({
                 // Logic on onPress() fetch calls suggested by Alfredo Sequeida
                 // All the fetch calls for getting the selected address details and then stting up the cookies and fetching popular restaurants
                 onPress={async () => {
-                  const detailData = await fetch(
-                    "http://localhost:8000/api/detail/location",
-                    {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify(addressArray[index]),
-                    }
-                  );
-                  const detailjson = await detailData.json();
-                  setAddress(detailjson);
-                  localStorage.setItem("address", JSON.stringify(detailjson)),
-                    await fetch("http://localhost:8000/api/set/location", {
-                      credentials: "include",
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify(detailjson),
-                    });
-
-                  const results = await fetch(
-                    "http://localhost:8000/api/popularPicks",
-                    {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                      credentials: "include",
-                      body: JSON.stringify({
-                        query: "",
-                      }),
-                    }
-                  );
+                  const detailData = await detailLocation(addressArray[index]);
+                  setAddress(detailData);
+                  localStorage.setItem("address", JSON.stringify(detailData)),
+                    await setLocation(detailData);
+                  const results = await popularPicks();
                   setVisible(false);
-                  setPopularRestaurants(await results.json());
+                  setPopularRestaurants(results);
                 }}
               >
                 <View
@@ -165,4 +134,3 @@ const ModalView = ({
 };
 
 export default ModalView;
-//Mayank Tamakuwala's Part ends here
