@@ -11,7 +11,7 @@ import {
   View,
 } from "react-native";
 import { useTailwind } from "tailwind-rn";
-import { autocomplete } from "../api/autocomplete";
+import { autocompleteLocation } from "../api/autocomplete";
 import { detailLocation } from "../api/detail";
 import { setLocation } from "../api/set";
 import { popularPicks } from "../api/get";
@@ -29,7 +29,7 @@ const ModalView = ({
 
   // Fetch call to the backend to get the autocomplete location
   useEffect(() => {
-    autocomplete(addressInput).then((x) => setAddressArray(x));
+    autocompleteLocation(addressInput).then((x) => setAddressArray(x));
   }, [addressInput]);
 
   return (
