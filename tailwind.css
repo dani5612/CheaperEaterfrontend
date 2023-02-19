@@ -96,6 +96,10 @@
   width: 2.25rem
 }
 
+.w-max {
+  width: max-content
+}
+
 .w-4 {
   width: 1rem
 }

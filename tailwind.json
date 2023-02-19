@@ -127,6 +127,11 @@
 			"width": 36
 		}
 	},
+	"w-max": {
+		"style": {
+			"width": "max-content"
+		}
+	},
 	"w-4": {
 		"style": {
 			"width": 16
