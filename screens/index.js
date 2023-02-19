@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Text,
   View,
@@ -11,10 +12,11 @@ import {
 } from "react-native";
 import { useTailwind } from "tailwind-rn";
 import { faker } from "@faker-js/faker";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import PageContainer from "../components/pageContainer";
 import { RestaurantCard } from "../components/cards";
 import ModalView from "../components/modal";
+
 import FoodTypes from "./foodTypes";
 
 const getBreakPoint = (width) => {
@@ -29,7 +31,8 @@ const getBreakPoint = (width) => {
   }
 };
 
-const MenuList = () => {
+const Index = () => {
+  //saving location details to to the local storage of the website
   if (JSON.parse(localStorage.getItem("address") === null)) {
     localStorage.setItem(
       "address",
@@ -44,41 +47,17 @@ const MenuList = () => {
     JSON.parse(localStorage.getItem("address"))
   );
   const [searchQuery, setSearchQuery] = useState("");
-
-  let RestaurantArray = [];
-
-  for (let i = 0; i < 11; i++) {
-    RestaurantArray.push({
-      title: faker.company.name(),
-      id: i,
-      image: faker.image.food(),
-    });
-  }
-
-  useEffect(() => {
-    if (address.address.address1 != "Set Location") {
-      fetch("http://localhost:8000/api/search", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          query: searchQuery,
-        }),
-      })
-        .then((response) => response.json())
-        .then((response) => console.log(response))
-        .catch((err) => console.error(err));
-    }
-  }, [searchQuery]);
+  const [popularRestaurants, setPopularRestaurants] = useState({ stores: [] });
 
   const [foodTypeScreen, showFoodTypeScreen] = useState(false);
 
   return (
     <PageContainer style={tailwind("m-2")}>
+      {/* Runs for the first time when the location hasn't been set by the cookies*/}
+      {console.log("Point 1")}
       {address.address.address1 === "Set Location" ? (
         <>
+          {console.log("Point 2")}
           <ImageBackground
             style={{
               flex: 1,
@@ -90,6 +69,7 @@ const MenuList = () => {
               visible={true}
               setVisible={setVisible}
               setAddress={getAddress}
+              setPopularRestaurants={setPopularRestaurants}
             />
           </ImageBackground>
         </>
@@ -99,10 +79,13 @@ const MenuList = () => {
             visible={visible}
             setVisible={setVisible}
             setAddress={getAddress}
+            setPopularRestaurants={setPopularRestaurants}
           />
           <View style={tailwind("flex flex-row justify-between")}>
             <View>
-              <Text style={tailwind("text-3xl font-bold")}>Delivery 🥘</Text>
+              <Text style={tailwind("text-3xl font-bold")}>
+                Hey!! How are you doing? 🥘
+              </Text>
             </View>
             <Image
               style={[tailwind("w-9 h-9"), { borderRadius: 20 }]}
@@ -110,7 +93,11 @@ const MenuList = () => {
               source={{ uri: faker.image.avatar() }}
             />
           </View>
-          <TouchableOpacity onPress={() => setVisible(true)}>
+          <TouchableOpacity
+            // Shows up the modal for the location setup when clicked on the location button
+            onPress={() => setVisible(true)}
+            style={tailwind("w-max")}
+          >
             <View style={tailwind("flex flex-row rounded-full items-center")}>
               <Image
                 style={tailwind("w-4 h-4")}
@@ -139,6 +126,7 @@ const MenuList = () => {
                 />
               </TouchableOpacity>
             )}
+
             <TextInput
               placeholder="What would you like to eat?"
               onFocus={() => showFoodTypeScreen(true)}
@@ -150,19 +138,14 @@ const MenuList = () => {
                 width: Platform.OS === "web" ? window.width / 2 : window.width,
               }}
               onChange={(e) => {
-                if (address.address.address1 === "Set Location") {
-                  setVisible(true);
-                } else {
-                  setSearchQuery(e.target.value);
-                }
+                setSearchQuery(e.target.value);
               }}
             ></TextInput>
           </View>
-          {/* Here */}
+
           {foodTypeScreen ? (
             <View>
               <FoodTypes closeFoodTypes={() => showFoodTypeScreen(false)} />
-              {/* Aqui dejando el food course cuz it needs tobe at the button #lmao */}
             </View>
           ) : (
             <View>
@@ -186,25 +169,36 @@ const MenuList = () => {
                   </Text>
                 </TouchableOpacity>
               </View>
-
-              <FlatList
-                data={RestaurantArray}
-                renderItem={({ item }) => {
-                  return (
-                    <View style={[tailwind("flex flex-1 ")]}>
-                      <RestaurantCard
-                        style={tailwind("m-2")}
-                        title={item.title}
-                        image={item.image}
-                        rating={(Math.random() * (5 - 1) + 1).toFixed(1)}
-                      />
-                    </View>
-                  );
-                }}
-                key={getBreakPoint(window.width)}
-                numColumns={numColumns[getBreakPoint(window.width)]}
-                keyExtractor={(item) => item.id}
-              />
+              {/* Shows the popular restaurants in the area when the location is selected */}
+              {popularRestaurants.stores.length != 0 ? (
+                <FlatList
+                  data={popularRestaurants.stores}
+                  renderItem={({ item }) => {
+                    return (
+                      <View style={[tailwind("flex flex-1 ")]}>
+                        <RestaurantCard
+                          style={tailwind("m-2")}
+                          title={item.title}
+                          image={item.image}
+                          rating={
+                            item.rating === null
+                              ? "No Ratings Found"
+                              : item.rating.toFixed(1)
+                          }
+                          onPress={() => {
+                            console.log(item.title);
+                          }}
+                        />
+                      </View>
+                    );
+                  }}
+                  key={getBreakPoint(window.width)}
+                  numColumns={numColumns[getBreakPoint(window.width)]}
+                  keyExtractor={(item) => item.id}
+                />
+              ) : (
+                <></>
+              )}
             </View>
           )}
         </>
@@ -213,4 +207,4 @@ const MenuList = () => {
   );
 };
 
-export default MenuList;
+export default Index;

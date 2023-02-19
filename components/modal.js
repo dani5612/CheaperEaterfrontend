@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import {
   FlatList,
@@ -12,22 +11,25 @@ import {
   View,
 } from "react-native";
 import { useTailwind } from "tailwind-rn";
+import { autocompleteLocation } from "../api/autocomplete";
+import { detailLocation } from "../api/detail";
+import { setLocation } from "../api/set";
+import { popularPicks } from "../api/get";
 
-const ModalView = ({ visible, children, setVisible, setAddress }) => {
+const ModalView = ({
+  visible,
+  setVisible,
+  setAddress,
+  setPopularRestaurants,
+}) => {
   const tailwind = useTailwind();
   const window = useWindowDimensions();
   const [addressInput, setAddressInput] = useState("");
   const [addressArray, setAddressArray] = useState([]);
 
+  // Fetch call to the backend to get the autocomplete location
   useEffect(() => {
-    fetch("http://localhost:8000/api/autocomplete/location", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: addressInput }),
-    })
-      .then((res) => res.json())
-      .then((json) => setAddressArray(json))
-      .catch((err) => console.error("error:" + err));
+    autocompleteLocation(addressInput).then((x) => setAddressArray(x));
   }, [addressInput]);
 
   return (
@@ -99,27 +101,16 @@ const ModalView = ({ visible, children, setVisible, setAddress }) => {
             data={addressArray}
             renderItem={({ item, index }) => (
               <TouchableOpacity
-                onPress={() => {
-                  fetch("http://localhost:8000/api/detail/location", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(addressArray[index]),
-                  })
-                    .then((res) => res.json())
-                    .then((json) => {
-                      [
-                        setAddress(json),
-                        localStorage.setItem("address", JSON.stringify(json)),
-                        fetch("http://localhost:8000/api/set/location", {
-                          credentials: "include",
-                          method: "POST",
-                          headers: { "Content-Type": "application/json" },
-                          body: JSON.stringify(json),
-                        }).catch((err) => console.error("error:" + err)),
-                      ];
-                    })
-                    .catch((err) => console.error("error:" + err));
+                // Logic on onPress() fetch calls suggested by Alfredo Sequeida
+                // All the fetch calls for getting the selected address details and then stting up the cookies and fetching popular restaurants
+                onPress={async () => {
+                  const detailData = await detailLocation(addressArray[index]);
+                  setAddress(detailData);
+                  localStorage.setItem("address", JSON.stringify(detailData)),
+                    await setLocation(detailData);
+                  const results = await popularPicks();
                   setVisible(false);
+                  setPopularRestaurants(results);
                 }}
               >
                 <View
@@ -136,7 +127,6 @@ const ModalView = ({ visible, children, setVisible, setAddress }) => {
             )}
             keyExtractor={(item) => item.id}
           />
-          {children}
         </View>
       </View>
     </Modal>
