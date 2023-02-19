@@ -13,10 +13,11 @@ import {
 import { useTailwind } from "tailwind-rn";
 import { faker } from "@faker-js/faker";
 import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import PageContainer from "../components/pageContainer";
 import { RestaurantCard } from "../components/cards";
 import ModalView from "../components/modal";
-
+import { search } from "../api/search";
 import FoodTypes from "./foodTypes";
 
 const getBreakPoint = (width) => {
@@ -32,6 +33,7 @@ const getBreakPoint = (width) => {
 };
 
 const Index = () => {
+  const navigation = useNavigation();
   //saving location details to to the local storage of the website
   if (JSON.parse(localStorage.getItem("address") === null)) {
     localStorage.setItem(
@@ -140,7 +142,13 @@ const Index = () => {
               onChange={(e) => {
                 setSearchQuery(e.target.value);
               }}
-            ></TextInput>
+              onSubmitEditing={async (e) => {
+                navigation.navigate("Search", {
+                  results: await search(searchQuery),
+                });
+                e.target.value = "";
+              }}
+            />
           </View>
 
           {foodTypeScreen ? (

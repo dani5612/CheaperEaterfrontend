@@ -37,8 +37,8 @@ const ListViewCard = ({
             "flex w-full flex-row justify-between pt-2 font-bold"
           )}
         >
-          <Text>${deliveryFee} delivery fee</Text>
-          <Text>{deliveryTime}</Text>
+          <Text>Delivery Fee: ${deliveryFee}</Text>
+          <Text>Delivery Time: {deliveryTime}</Text>
         </View>
       </View>
     </View>
