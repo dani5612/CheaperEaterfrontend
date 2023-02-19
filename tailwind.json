@@ -282,12 +282,6 @@
 			"lineHeight": 32
 		}
 	},
-	"text-base": {
-		"style": {
-			"fontSize": 16,
-			"lineHeight": 24
-		}
-	},
 	"font-bold": {
 		"style": {
 			"fontWeight": "700"

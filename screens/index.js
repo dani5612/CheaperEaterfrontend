@@ -11,10 +11,12 @@ import {
 } from "react-native";
 import { useTailwind } from "tailwind-rn";
 import { faker } from "@faker-js/faker";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import PageContainer from "../components/pageContainer";
 import { RestaurantCard } from "../components/cards";
 import ModalView from "../components/modal";
+import { search } from "../api/search";
 import FoodTypes from "./foodTypes";
 
 const getBreakPoint = (width) => {
@@ -30,6 +32,7 @@ const getBreakPoint = (width) => {
 };
 
 const MenuList = () => {
+  const navigation = useNavigation();
   if (JSON.parse(localStorage.getItem("address") === null)) {
     localStorage.setItem(
       "address",
@@ -54,24 +57,6 @@ const MenuList = () => {
       image: faker.image.food(),
     });
   }
-
-  useEffect(() => {
-    if (address.address.address1 != "Set Location") {
-      fetch("http://localhost:8000/api/search", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          query: searchQuery,
-        }),
-      })
-        .then((response) => response.json())
-        .then((response) => console.log(response))
-        .catch((err) => console.error(err));
-    }
-  }, [searchQuery]);
 
   const [foodTypeScreen, showFoodTypeScreen] = useState(false);
 
@@ -150,19 +135,19 @@ const MenuList = () => {
                 width: Platform.OS === "web" ? window.width / 2 : window.width,
               }}
               onChange={(e) => {
-                if (address.address.address1 === "Set Location") {
-                  setVisible(true);
-                } else {
-                  setSearchQuery(e.target.value);
-                }
+                setSearchQuery(e.target.value);
               }}
-            ></TextInput>
+              onSubmitEditing={async (e) => {
+                navigation.navigate("Search", {
+                  results: await search(searchQuery),
+                });
+                e.target.value = "";
+              }}
+            />
           </View>
-          {/* Here */}
           {foodTypeScreen ? (
             <View>
               <FoodTypes closeFoodTypes={() => showFoodTypeScreen(false)} />
-              {/* Aqui dejando el food course cuz it needs tobe at the button #lmao */}
             </View>
           ) : (
             <View>
