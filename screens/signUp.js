@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import { useState } from "react";
+import { useRef } from "react";
 import { Image, View, Text, TouchableOpacity } from "react-native";
 import { useTailwind } from "tailwind-rn";
 
@@ -7,10 +6,12 @@ import { IconInput } from "../components/inputs";
 
 const SignUp = () => {
   const tailwind = useTailwind();
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
-  const [dbInsert, setDbInsert] = useState([]);
+  // const [email, setEmail] = useState("");
+  // const [name, setName] = useState("");
+  // const [password, setPassword] = useState("");
+  const email = useRef("");
+  const name = useRef("");
+  const password = useRef("");
   return (
     <View style={tailwind("flex flex-1 sm:items-center")}>
       <View
@@ -28,21 +29,30 @@ const SignUp = () => {
             style={tailwind("mb-4")}
             placeholder="name"
             icon={require("../assets/icons/black/person.png")}
-            onChange={(e) => setName(e)}
+            ref={name}
+            onChange={(e) => {
+              name.current = e;
+            }}
           />
           <IconInput
             style={tailwind("mb-4")}
             placeholder="email"
             icon={require("../assets/icons/black/at.png")}
             keyboardType="email-address"
-            onChange={(e) => setEmail(e)}
+            ref={email}
+            onChange={(e) => {
+              email.current = e;
+            }}
           />
           <IconInput
             style={tailwind("mb-4")}
             placeholder="password"
             icon={require("../assets/icons/black/key.png")}
             secureTextEntry={true}
-            onChange={(e) => setPassword(e)}
+            ref={password}
+            onChange={(e) => {
+              password.current = e;
+            }}
           />
         </View>
         <View>
@@ -55,16 +65,15 @@ const SignUp = () => {
                 },
                 body: JSON.stringify({
                   data: {
-                    name: name,
-                    email: email,
-                    password: password,
+                    name: name.current,
+                    email: email.current,
+                    password: password.current,
                   },
                 }),
               };
 
-              fetch("http://localhost:8000/api/db/addcred", options)
+              fetch("http://localhost:8000/api/auth/signup", options)
                 .then((res) => res.json())
-                .then((data) => setDbInsert(data.message))
                 .catch((err) => console.error(err));
             }}
             style={[

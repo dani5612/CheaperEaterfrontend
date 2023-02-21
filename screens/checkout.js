@@ -1,19 +1,15 @@
-/* eslint-disable no-unused-vars */
 import { useTailwind } from "tailwind-rn";
 import {
   View,
   Text,
-  Button,
   TouchableOpacity,
   FlatList,
   useWindowDimensions,
-  StyleSheet,
 } from "react-native";
 import { Image } from "react-native-web";
 import { faker } from "@faker-js/faker";
 import { ListViewCard } from "../components/cards";
-import { IconInput } from "../components/inputs";
-import { RoundButton } from "../components/buttons";
+import { getBreakPoint } from "../utils/screen";
 
 let ORDER = [];
 Array.from({ length: 3 }).forEach((_, index) => {
@@ -31,20 +27,6 @@ Array.from({ length: 3 }).forEach((_, index) => {
     } min`,
   });
 });
-
-const getBreakPoint = (width) => {
-  const breakPoints = { sm: 640, md: 768, lg: 1024, xl: 1280 };
-  if (width <= breakPoints.sm) {
-    return "sm";
-  }
-  if (width <= breakPoints.md) {
-    return "md";
-  } else if (width <= breakPoints.lg) {
-    return "lg";
-  } else {
-    return "xl";
-  }
-};
 
 const Checkout = () => {
   const tailwind = useTailwind();

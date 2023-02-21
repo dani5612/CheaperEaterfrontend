@@ -15,19 +15,8 @@ import { useEffect, useState } from "react";
 import PageContainer from "../components/pageContainer";
 import { RestaurantCard } from "../components/cards";
 import ModalView from "../components/modal";
+import { getBreakPoint } from "../utils/screen";
 import FoodTypes from "./foodTypes";
-
-const getBreakPoint = (width) => {
-  const breakPoints = { sm: 640, md: 768, lg: 1024, xl: 1280 };
-  if (width <= breakPoints.sm) {
-    return "sm";
-  }
-  if (width <= breakPoints.lg) {
-    return "lg";
-  } else {
-    return "xl";
-  }
-};
 
 const MenuList = () => {
   if (JSON.parse(localStorage.getItem("address") === null)) {
@@ -95,13 +84,6 @@ const MenuList = () => {
         </>
       ) : (
         <>
-          {/* <View
-            style={{
-              backgroundColor: "white",
-              position: "absolute",
-              width: "100%",
-            }}
-          > */}
           <ModalView
             visible={visible}
             setVisible={setVisible}
@@ -169,8 +151,6 @@ const MenuList = () => {
               }}
             ></TextInput>
           </View>
-          {/* </View> */}
-          {/* Here */}
           {foodTypeScreen ? (
             <View>
               <FoodTypes closeFoodTypes={() => showFoodTypeScreen(false)} />
