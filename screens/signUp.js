@@ -6,9 +6,6 @@ import { IconInput } from "../components/inputs";
 
 const SignUp = () => {
   const tailwind = useTailwind();
-  // const [email, setEmail] = useState("");
-  // const [name, setName] = useState("");
-  // const [password, setPassword] = useState("");
   const email = useRef("");
   const name = useRef("");
   const password = useRef("");
@@ -30,9 +27,6 @@ const SignUp = () => {
             placeholder="name"
             icon={require("../assets/icons/black/person.png")}
             ref={name}
-            onChange={(e) => {
-              name.current = e;
-            }}
           />
           <IconInput
             style={tailwind("mb-4")}
@@ -40,9 +34,6 @@ const SignUp = () => {
             icon={require("../assets/icons/black/at.png")}
             keyboardType="email-address"
             ref={email}
-            onChange={(e) => {
-              email.current = e;
-            }}
           />
           <IconInput
             style={tailwind("mb-4")}
@@ -50,9 +41,6 @@ const SignUp = () => {
             icon={require("../assets/icons/black/key.png")}
             secureTextEntry={true}
             ref={password}
-            onChange={(e) => {
-              password.current = e;
-            }}
           />
         </View>
         <View>
@@ -65,9 +53,9 @@ const SignUp = () => {
                 },
                 body: JSON.stringify({
                   data: {
-                    name: name.current,
-                    email: email.current,
-                    password: password.current,
+                    name: name.current.value,
+                    email: email.current.value,
+                    password: password.current.value,
                   },
                 }),
               };
