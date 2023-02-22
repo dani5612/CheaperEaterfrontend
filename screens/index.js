@@ -18,8 +18,8 @@ import PageContainer from "../components/pageContainer";
 import { RestaurantCard } from "../components/cards";
 import ModalView from "../components/modal";
 import { getBreakPoint } from "../utils/screen";
-import FoodTypes from "./foodTypes";
 import { search } from "../api/search";
+import FoodTypes from "./foodTypes";
 
 const Index = () => {
   const navigation = useNavigation();
