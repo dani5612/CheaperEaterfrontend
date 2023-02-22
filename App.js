@@ -7,7 +7,7 @@ import Base from "./screens/base";
 // import Login from "./screens/login";
 // import Index from "./screens/index";
 // import ListView from "./screens/listView";
-import SignUp from "./screens/signUp";
+// import SignUp from "./screens/signUp";
 // import AccountRecovery from "./screens/accountRecovery";
 // import DbTest from "./screens/dbTest";
 import Pages from "./routes/routes";
