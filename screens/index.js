@@ -10,44 +10,57 @@ import {
   Platform,
   ImageBackground,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTailwind } from "tailwind-rn";
 import { faker } from "@faker-js/faker";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import PageContainer from "../components/pageContainer";
 import { RestaurantCard } from "../components/cards";
 import ModalView from "../components/modal";
 import { getBreakPoint } from "../utils/screen";
 import { search } from "../api/search";
+import { popularPicks } from "../api/get";
 import FoodTypes from "./foodTypes";
 
 const Index = () => {
   const navigation = useNavigation();
-  //saving location details to to the local storage of the website
-
-  if (JSON.parse(localStorage.getItem("address") === null)) {
-    localStorage.setItem(
-      "address",
-      JSON.stringify({ address: { address1: "Set Location" } })
-    );
-  }
   const tailwind = useTailwind();
   const numColumns = { sm: 2, lg: 4, xl: 4 };
   const window = useWindowDimensions();
   const [visible, setVisible] = useState(false);
-  const [address, getAddress] = useState(
-    JSON.parse(localStorage.getItem("address"))
-  );
+  const [address, setAddress] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
   const [popularRestaurants, setPopularRestaurants] = useState({ stores: [] });
 
   const [foodTypeScreen, showFoodTypeScreen] = useState(false);
 
+  useEffect(() => {
+    (async () => {
+      const storedAddress = JSON.parse(await AsyncStorage.getItem("address"));
+      console.log(storedAddress);
+      setAddress(storedAddress);
+
+      if (!storedAddress?.address?.address1) {
+        await AsyncStorage.setItem(
+          "address",
+          JSON.stringify({ address: { address1: "Set Location" } })
+        );
+      } else if (
+        storedAddress?.address?.address1 &&
+        storedAddress?.address?.address1 !== "Set Location"
+      ) {
+        setPopularRestaurants(await popularPicks());
+      }
+    })();
+  }, []);
+
   return (
     <PageContainer style={tailwind("m-2")}>
       {/* Runs for the first time when the location hasn't been set by the cookies*/}
       {console.log("Point 1")}
-      {address.address.address1 === "Set Location" ? (
+      {address?.address?.address1 === "Set Location" ||
+      !address?.address?.address1 ? (
         <>
           {console.log("Point 2")}
           <ImageBackground
@@ -60,7 +73,7 @@ const Index = () => {
             <ModalView
               visible={true}
               setVisible={setVisible}
-              setAddress={getAddress}
+              setAddress={setAddress}
               setPopularRestaurants={setPopularRestaurants}
             />
           </ImageBackground>
@@ -70,7 +83,7 @@ const Index = () => {
           <ModalView
             visible={visible}
             setVisible={setVisible}
-            setAddress={getAddress}
+            setAddress={setAddress}
             setPopularRestaurants={setPopularRestaurants}
           />
 
@@ -89,7 +102,7 @@ const Index = () => {
           <TouchableOpacity
             // Shows up the modal for the location setup when clicked on the location button
             onPress={() => setVisible(true)}
-            style={tailwind("w-max")}
+            style={tailwind("w-full")}
           >
             <View style={tailwind("flex flex-row rounded-full items-center")}>
               <Image
@@ -98,7 +111,7 @@ const Index = () => {
                 source={require("../assets/icons/black/location.png")}
               />
               <Text style={tailwind("font-light ml-2")}>
-                {address.address.address1}
+                {address?.address?.address1}
               </Text>
             </View>
           </TouchableOpacity>
