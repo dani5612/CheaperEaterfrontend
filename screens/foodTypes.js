@@ -6,9 +6,11 @@ import {
   StyleSheet,
 } from "react-native";
 import { useTailwind } from "tailwind-rn";
+import { useNavigation } from "@react-navigation/native";
 import { isMobile } from "react-device-detect";
 
 const FoodTypes = ({ closeFoodTypes }) => {
+  const navigation = useNavigation();
   const foodCategories = [
     { key: "Asian", logo: "🍜" },
     { key: "Mexican", logo: "🌮" },
@@ -31,6 +33,7 @@ const FoodTypes = ({ closeFoodTypes }) => {
   const openCategory = (item) => {
     console.log(item);
     closeFoodTypes();
+    navigation.navigate("Search");
   };
 
   const tailwind = useTailwind();

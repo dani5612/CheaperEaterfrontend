@@ -42,20 +42,24 @@ const ListViewCard = ({
         >
           <Text>Item price ${foodPrice} </Text>
           <Text>Service fee ${serviceFee} </Text>
-          <Text>Delivery fee ${deliveryFee} </Text>
           <Text>Total price ${totalPrice} </Text>
-          <Text>Delivery Time {deliveryTime}</Text>
+          <Text>Delivery Fee: ${deliveryFee}</Text>
+          <Text>Delivery Time: {deliveryTime}</Text>
         </View>
       </View>
     </View>
   );
 };
 
-const RestaurantCard = ({ title, image, style, rating }) => {
+//Mayank Tamakuwala's Part start here
+const RestaurantCard = ({ title, image, style, rating, onPress }) => {
   const tailwind = useTailwind();
   return (
     <TouchableOpacity
       style={[tailwind("bg-white rounded-xl min-h-[300px]"), style]}
+      onPress={() => {
+        onPress();
+      }}
     >
       <View
         style={tailwind(
@@ -81,5 +85,5 @@ const RestaurantCard = ({ title, image, style, rating }) => {
     </TouchableOpacity>
   );
 };
-
+//Mayank Tamakuwala's Part ends here
 export { ListViewCard, RestaurantCard };
