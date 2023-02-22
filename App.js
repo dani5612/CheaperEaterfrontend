@@ -2,6 +2,7 @@ import React from "react";
 import { TailwindProvider } from "tailwind-rn";
 import { NavigationContainer } from "@react-navigation/native";
 import utilities from "./tailwind.json";
+// import Checkout from "./screens/checkout";
 import Base from "./screens/base";
 // import Login from "./screens/login";
 // import Index from "./screens/index";
@@ -20,6 +21,7 @@ export default function App() {
           {/* <Index /> */}
           {/* <ListView /> */}
           {/* <SignUp/> */}
+          {/* <Checkout /> */}
           {/* <AccountRecovery/> */}
           {/* <DbTest /> */}
           <Pages />

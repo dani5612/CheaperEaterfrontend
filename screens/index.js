@@ -17,24 +17,14 @@ import { useNavigation } from "@react-navigation/native";
 import PageContainer from "../components/pageContainer";
 import { RestaurantCard } from "../components/cards";
 import ModalView from "../components/modal";
+import { getBreakPoint } from "../utils/screen";
 import { search } from "../api/search";
 import FoodTypes from "./foodTypes";
-
-const getBreakPoint = (width) => {
-  const breakPoints = { sm: 640, md: 768, lg: 1024, xl: 1280 };
-  if (width <= breakPoints.sm) {
-    return "sm";
-  }
-  if (width <= breakPoints.lg) {
-    return "lg";
-  } else {
-    return "xl";
-  }
-};
 
 const Index = () => {
   const navigation = useNavigation();
   //saving location details to to the local storage of the website
+
   if (JSON.parse(localStorage.getItem("address") === null)) {
     localStorage.setItem(
       "address",
@@ -83,6 +73,7 @@ const Index = () => {
             setAddress={getAddress}
             setPopularRestaurants={setPopularRestaurants}
           />
+
           <View style={tailwind("flex flex-row justify-between")}>
             <View>
               <Text style={tailwind("text-3xl font-bold")}>
@@ -130,6 +121,9 @@ const Index = () => {
             )}
 
             <TextInput
+              onBlur={() => {
+                showFoodTypeScreen(false);
+              }}
               placeholder="What would you like to eat?"
               onFocus={() => showFoodTypeScreen(true)}
               style={{

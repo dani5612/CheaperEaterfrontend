@@ -3,20 +3,7 @@ import { useTailwind } from "tailwind-rn";
 import { faker } from "@faker-js/faker";
 import { ListViewCard } from "../components/cards";
 import PageContainer from "../components/pageContainer";
-
-const getBreakPoint = (width) => {
-  const breakPoints = { sm: 640, md: 768, lg: 1024, xl: 1280 };
-  if (width <= breakPoints.sm) {
-    return "sm";
-  }
-  if (width <= breakPoints.md) {
-    return "md";
-  } else if (width <= breakPoints.lg) {
-    return "lg";
-  } else {
-    return "xl";
-  }
-};
+import { getBreakPoint } from "../utils/screen";
 
 const ListView = ({ route }) => {
   const tailwind = useTailwind();
