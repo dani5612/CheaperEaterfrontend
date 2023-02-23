@@ -185,7 +185,7 @@ const Index = () => {
                 </TouchableOpacity>
               </View>
               {/* Shows the popular restaurants in the area when the location is selected */}
-              {popularRestaurants.stores.length != 0 ? (
+              {popularRestaurants?.stores?.length != 0 ? (
                 <FlatList
                   data={popularRestaurants.stores}
                   renderItem={({ item }) => {
