@@ -6,7 +6,6 @@ const API_PORT = process.env.API_PORT;
  * @returns The JSON of with the 20 popular restaurants results from grubhub.
  */
 const popularPicks = async () => {
-  console.log("popular picks");
   return await (
     await fetch(`http://${API_DOMAIN}:${API_PORT}/api/popularPicks`, {
       method: "POST",

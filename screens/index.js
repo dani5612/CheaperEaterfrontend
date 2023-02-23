@@ -38,7 +38,6 @@ const Index = () => {
   useEffect(() => {
     (async () => {
       const storedAddress = JSON.parse(await AsyncStorage.getItem("address"));
-      console.log(storedAddress);
       setAddress(storedAddress);
 
       if (!storedAddress?.address?.address1) {

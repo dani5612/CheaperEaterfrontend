@@ -7,8 +7,6 @@ const API_PORT = process.env.API_PORT;
  * @returns Array JSONs of top 5 location.
  */
 const autocompleteLocation = async (addressInput) => {
-  console.log("autocomplete");
-  console.log(process.env.API_DOMAIN);
   return await (
     await fetch(`http://${API_DOMAIN}:${API_PORT}/api/autocomplete/location`, {
       method: "POST",
