@@ -12,7 +12,6 @@ import {
 import { useTailwind } from "tailwind-rn";
 import { faker } from "@faker-js/faker";
 import { useState, useEffect } from "react";
-import { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import PageContainer from "../components/pageContainer";
 import { RestaurantCard } from "../components/cards";
@@ -73,7 +72,6 @@ const Index = () => {
               visible={true}
               setVisible={setVisible}
               setAddress={setAddress}
-              setAddress={setAddress}
               setPopularRestaurants={setPopularRestaurants}
             />
           </ImageBackground>
@@ -83,7 +81,6 @@ const Index = () => {
           <ModalView
             visible={visible}
             setVisible={setVisible}
-            setAddress={setAddress}
             setAddress={setAddress}
             setPopularRestaurants={setPopularRestaurants}
           />
