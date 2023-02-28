@@ -13,7 +13,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTailwind } from "tailwind-rn";
 import { faker } from "@faker-js/faker";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigation } from "@react-navigation/native";
 import PageContainer from "../components/pageContainer";
 import { RestaurantCard } from "../components/cards";
@@ -34,6 +34,24 @@ const Index = () => {
   const [popularRestaurants, setPopularRestaurants] = useState({ stores: [] });
 
   const [foodTypeScreen, showFoodTypeScreen] = useState(false);
+  const foodTypesRef = useRef(null);
+  const searchBarRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        foodTypesRef.current &&
+        !foodTypesRef.current.contains(event.target) &&
+        !searchBarRef.current.isFocused()
+      ) {
+        showFoodTypeScreen(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside, true);
+    return () => {
+      document.removeEventListener("click", handleClickOutside, true);
+    };
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -98,12 +116,12 @@ const Index = () => {
               source={{ uri: faker.image.avatar() }}
             />
           </View>
-          <TouchableOpacity
-            // Shows up the modal for the location setup when clicked on the location button
-            onPress={() => setVisible(true)}
-            style={tailwind("w-full")}
-          >
-            <View style={tailwind("flex flex-row rounded-full items-center")}>
+          <View style={tailwind("flex flex-row")}>
+            <TouchableOpacity
+              // Shows up the modal for the location setup when clicked on the location button
+              onPress={() => setVisible(true)}
+              style={tailwind("flex-row")}
+            >
               <Image
                 style={tailwind("w-4 h-4")}
                 resizeMode="contain"
@@ -112,8 +130,8 @@ const Index = () => {
               <Text style={tailwind("font-light ml-2")}>
                 {address?.address?.address1}
               </Text>
-            </View>
-          </TouchableOpacity>
+            </TouchableOpacity>
+          </View>
 
           <View style={tailwind("flex flex-row items-center")}>
             {!foodTypeScreen ? (
@@ -133,9 +151,7 @@ const Index = () => {
             )}
 
             <TextInput
-              onBlur={() => {
-                showFoodTypeScreen(false);
-              }}
+              ref={searchBarRef}
               placeholder="What would you like to eat?"
               onFocus={() => showFoodTypeScreen(true)}
               style={{
@@ -158,7 +174,7 @@ const Index = () => {
           </View>
 
           {foodTypeScreen ? (
-            <View>
+            <View ref={foodTypesRef}>
               <FoodTypes closeFoodTypes={() => showFoodTypeScreen(false)} />
             </View>
           ) : (
