@@ -12,6 +12,7 @@ import {
 import { useTailwind } from "tailwind-rn";
 import { faker } from "@faker-js/faker";
 import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import PageContainer from "../components/pageContainer";
 import { RestaurantCard } from "../components/cards";
@@ -72,6 +73,7 @@ const Index = () => {
               visible={true}
               setVisible={setVisible}
               setAddress={setAddress}
+              setAddress={setAddress}
               setPopularRestaurants={setPopularRestaurants}
             />
           </ImageBackground>
@@ -81,6 +83,7 @@ const Index = () => {
           <ModalView
             visible={visible}
             setVisible={setVisible}
+            setAddress={setAddress}
             setAddress={setAddress}
             setPopularRestaurants={setPopularRestaurants}
           />
@@ -100,7 +103,7 @@ const Index = () => {
           <TouchableOpacity
             // Shows up the modal for the location setup when clicked on the location button
             onPress={() => setVisible(true)}
-            style={tailwind("w-max")}
+            style={tailwind("w-full")}
           >
             <View style={tailwind("flex flex-row rounded-full items-center")}>
               <Image
@@ -109,7 +112,7 @@ const Index = () => {
                 source={require("../assets/icons/black/location.png")}
               />
               <Text style={tailwind("font-light ml-2")}>
-                {address.address.address1}
+                {address?.address?.address1}
               </Text>
             </View>
           </TouchableOpacity>
@@ -180,7 +183,7 @@ const Index = () => {
                 </TouchableOpacity>
               </View>
               {/* Shows the popular restaurants in the area when the location is selected */}
-              {popularRestaurants.stores.length != 0 ? (
+              {popularRestaurants?.stores?.length != 0 ? (
                 <FlatList
                   data={popularRestaurants.stores}
                   renderItem={({ item }) => {

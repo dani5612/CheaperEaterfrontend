@@ -3,8 +3,6 @@ const API_PORT = process.env.API_PORT;
 
 /**
  * The API call to backend to set the location cookies in the browser.
- * @param {Object} detailAddress is the address from the detail API endpoint to set.
- * @return {Obejct} a cookie object with the location data that will be stored in the local storage.
  */
 const setLocation = async (detailAddress) => {
   return await (

@@ -84,7 +84,7 @@ const ModalView = ({
               ]}
               placeholder="Enter delivery address"
               placeholderTextColor={"#ababab"}
-              onChange={(e) => setAddressInput(e.target.value)}
+              onChangeText={(text) => setAddressInput(text)}
             />
           </View>
           <FlatList
@@ -107,6 +107,7 @@ const ModalView = ({
                 // All the fetch calls for getting the selected address details and then stting up the cookies and fetching popular restaurants
                 onPress={async () => {
                   const detailData = await detailLocation(addressArray[index]);
+                  console.log(detailData);
                   setAddress(detailData);
                   await setLocalStorage("address", detailData);
                   console.log("Point 1");
