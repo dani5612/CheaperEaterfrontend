@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Text,
   View,
@@ -12,10 +11,7 @@ import {
 } from "react-native";
 import { useTailwind } from "tailwind-rn";
 import { faker } from "@faker-js/faker";
-import { useState,
-  useEffect,
-  useRef
-} from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigation } from "@react-navigation/native";
 import PageContainer from "../components/pageContainer";
 import { RestaurantCard } from "../components/cards";
@@ -23,35 +19,39 @@ import ModalView from "../components/modal";
 import { getBreakPoint } from "../utils/screen";
 import { search } from "../api/search";
 import FoodTypes from "./foodTypes";
+import { TouchableWithoutFeedback } from "react-native-web";
 
 const Index = () => {
   const navigation = useNavigation();
   //saving location details to to the local storage of the website
 
-  let foodTypeRef = useRef();
+  const foodTypeRef = useRef(null);
+
+  const handlePressOutsideFoodType = () => {
+
+    showFoodTypeScreen(false);
+    console.log("Clicked outside food type");
+  }
 
   useEffect(() => {
 
-    let handleClickOutsideFoodType = (event) => {
-
-      if (!foodTypeRef.current.contains(event.target)){
-  
-        showFoodTypeScreen(false);
-        console.log("Clicked outside food type");
-      }
-      else{
+    function handleClickOutsideFoodType  (event)  {
+      if (foodTypeRef.current && !foodTypeRef.current.contains(event.target)) {
+        handlePressOutsideFoodType();
+      } else {
         console.log("Clicked inside food type");
       }
-  
-    }
+    };
 
     document.addEventListener("click", handleClickOutsideFoodType, true)
-    
-  }, []);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutsideFoodType, true)
+    }
+
+  }, [foodTypeRef]);
 
   //const foodTypeRef = useRef(null);
-
-  
 
   if (JSON.parse(localStorage.getItem("address") === null)) {
     localStorage.setItem(
@@ -139,7 +139,7 @@ const Index = () => {
                 source={require("../assets/icons/black/search.png")}
               />
             ) : (
-              <TouchableOpacity  onPress={() => showFoodTypeScreen(false)}>
+              <TouchableOpacity onPress={() => showFoodTypeScreen(false)}>
                 <Image
                   style={tailwind("w-5 h-5")}
                   resizeMode="contain"
@@ -149,7 +149,6 @@ const Index = () => {
             )}
 
             <TextInput
-              
               placeholder="What would you like to eat?"
               onFocus={() => showFoodTypeScreen(true)}
               style={{
@@ -172,9 +171,13 @@ const Index = () => {
           </View>
 
           {foodTypeScreen ? (
-            <View ref={foodTypeRef }>
-              <FoodTypes closeFoodTypes={() => showFoodTypeScreen(false)} />
-            </View>
+            <TouchableWithoutFeedback onPress = {handleClickOutsideFoodType} >
+              { foodTypeScreen && (
+              <View ref={foodTypeRef}>
+                <FoodTypes closeFoodTypes={() => showFoodTypeScreen(false)} />
+              </View>
+              )}
+            </TouchableWithoutFeedback>
           ) : (
             <View>
               <View
