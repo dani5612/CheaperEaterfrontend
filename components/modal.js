@@ -15,6 +15,7 @@ import { autocompleteLocation } from "../api/autocomplete";
 import { detailLocation } from "../api/detail";
 import { setLocation } from "../api/set";
 import { popularPicks } from "../api/get";
+import { getLocalStorage, setLocalStorage } from "../api/localStorage";
 
 const ModalView = ({
   visible,
@@ -57,7 +58,8 @@ const ModalView = ({
             shadowRadius: 10,
             elevation: 5,
             maxHeight:
-              Platform.OS === "web" ? window.height * 0.6 : window.height * 0.5,
+              Platform.OS === "web" ? window.height * 0.6 : window.height * 0.4,
+            maxWidth: Platform.OS === "web" ? null : window.width * 0.99,
           }}
         >
           <View
@@ -106,9 +108,16 @@ const ModalView = ({
                 onPress={async () => {
                   const detailData = await detailLocation(addressArray[index]);
                   setAddress(detailData);
-                  localStorage.setItem("address", JSON.stringify(detailData)),
-                    await setLocation(detailData);
-                  const results = await popularPicks();
+                  await setLocalStorage("address", detailData);
+                  console.log("Point 1");
+                  await setLocalStorage(
+                    "cookies",
+                    await setLocation(detailData)
+                  );
+                  console.log("Point 2");
+                  const results = await popularPicks(
+                    await getLocalStorage("cookies")
+                  );
                   setVisible(false);
                   setPopularRestaurants(results);
                 }}

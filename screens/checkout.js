@@ -63,17 +63,21 @@ const Checkout = () => {
                     style={tailwind("m-2")}
                     title={item.title}
                     image={item.image}
-                    foodPrice={item.foodPrice}
-                    serviceFee={item.serviceFee}
                     deliveryFee={item.deliveryFee}
-                    totalPrice={(
-                      Number(item.foodPrice) +
-                      Number(item.serviceFee) +
-                      Number(item.deliveryFee)
-                    ).toFixed(2)}
                     deliveryTime={item.deliveryTime}
                     rating={item.rating}
-                  />
+                  >
+                    <Text>Item price ${item.foodPrice} </Text>
+                    <Text>Service fee ${item.serviceFee} </Text>
+                    <Text>
+                      Total price $
+                      {(
+                        Number(item.foodPrice) +
+                        Number(item.serviceFee) +
+                        Number(item.deliveryFee)
+                      ).toFixed(2)}{" "}
+                    </Text>
+                  </ListViewCard>
                 </View>
               );
             }}
