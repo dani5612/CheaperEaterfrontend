@@ -12,7 +12,10 @@ import {
 } from "react-native";
 import { useTailwind } from "tailwind-rn";
 import { faker } from "@faker-js/faker";
-import { useState } from "react";
+import { useState,
+  useEffect,
+  useRef
+} from "react";
 import { useNavigation } from "@react-navigation/native";
 import PageContainer from "../components/pageContainer";
 import { RestaurantCard } from "../components/cards";
@@ -24,6 +27,31 @@ import FoodTypes from "./foodTypes";
 const Index = () => {
   const navigation = useNavigation();
   //saving location details to to the local storage of the website
+
+  let foodTypeRef = useRef();
+
+  useEffect(() => {
+
+    let handleClickOutsideFoodType = (event) => {
+
+      if (!foodTypeRef.current.contains(event.target)){
+  
+        showFoodTypeScreen(false);
+        console.log("Clicked outside food type");
+      }
+      else{
+        console.log("Clicked inside food type");
+      }
+  
+    }
+
+    document.addEventListener("click", handleClickOutsideFoodType, true)
+    
+  }, []);
+
+  //const foodTypeRef = useRef(null);
+
+  
 
   if (JSON.parse(localStorage.getItem("address") === null)) {
     localStorage.setItem(
@@ -111,7 +139,7 @@ const Index = () => {
                 source={require("../assets/icons/black/search.png")}
               />
             ) : (
-              <TouchableOpacity onPress={() => showFoodTypeScreen(false)}>
+              <TouchableOpacity  onPress={() => showFoodTypeScreen(false)}>
                 <Image
                   style={tailwind("w-5 h-5")}
                   resizeMode="contain"
@@ -121,9 +149,7 @@ const Index = () => {
             )}
 
             <TextInput
-              onBlur={() => {
-                showFoodTypeScreen(false);
-              }}
+              
               placeholder="What would you like to eat?"
               onFocus={() => showFoodTypeScreen(true)}
               style={{
@@ -146,7 +172,7 @@ const Index = () => {
           </View>
 
           {foodTypeScreen ? (
-            <View>
+            <View ref={foodTypeRef }>
               <FoodTypes closeFoodTypes={() => showFoodTypeScreen(false)} />
             </View>
           ) : (

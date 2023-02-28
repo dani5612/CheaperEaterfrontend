@@ -8,6 +8,7 @@ import {
 import { useTailwind } from "tailwind-rn";
 import { useNavigation } from "@react-navigation/native";
 import { isMobile } from "react-device-detect";
+import { search } from "../api/search";
 
 const FoodTypes = ({ closeFoodTypes }) => {
   const navigation = useNavigation();
@@ -30,10 +31,12 @@ const FoodTypes = ({ closeFoodTypes }) => {
     { key: "Mediterranean", logo: "🥙" },
     { key: "Steak", logo: "🥩" },
   ];
-  const openCategory = (item) => {
+  const openCategory = async (item) => {
     console.log(item);
     closeFoodTypes();
-    navigation.navigate("Search");
+    navigation.navigate(
+      navigation.navigate("Search", { results: await search(item) })
+    );
   };
 
   const tailwind = useTailwind();
