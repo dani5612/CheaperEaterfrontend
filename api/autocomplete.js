@@ -1,3 +1,6 @@
+const API_DOMAIN = process.env.API_DOMAIN;
+const API_PORT = process.env.API_PORT;
+
 /**
  * The API call to backend to get the autocomplete suggestions of the location
  * @param {string} addressInput is the address quesry which user will input on the screen
@@ -5,7 +8,7 @@
  */
 const autocompleteLocation = async (addressInput) => {
   return await (
-    await fetch("http://localhost:8000/api/autocomplete/location", {
+    await fetch(`http://${API_DOMAIN}:${API_PORT}/api/autocomplete/location`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ query: addressInput }),
@@ -20,7 +23,7 @@ const autocompleteLocation = async (addressInput) => {
  */
 const autocompleteSearch = async (itemInput) => {
   return await (
-    await fetch("http://localhost:8000/api/autocomplete/search", {
+    await fetch(`http://${API_DOMAIN}:${API_PORT}/api/autocomplete/search`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ query: itemInput }),

@@ -10,6 +10,7 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTailwind } from "tailwind-rn";
 import { autocompleteLocation } from "../api/autocomplete";
 import { detailLocation } from "../api/detail";
@@ -82,7 +83,7 @@ const ModalView = ({
               ]}
               placeholder="Enter delivery address"
               placeholderTextColor={"#ababab"}
-              onChange={(e) => setAddressInput(e.target.value)}
+              onChangeText={(text) => setAddressInput(text)}
             />
           </View>
           <FlatList
@@ -105,10 +106,15 @@ const ModalView = ({
                 // All the fetch calls for getting the selected address details and then stting up the cookies and fetching popular restaurants
                 onPress={async () => {
                   const detailData = await detailLocation(addressArray[index]);
+                  console.log(detailData);
                   setAddress(detailData);
-                  localStorage.setItem("address", JSON.stringify(detailData)),
+                  await AsyncStorage.setItem(
+                    "address",
+                    JSON.stringify(detailData)
+                  ),
                     await setLocation(detailData);
                   const results = await popularPicks();
+                  console.log(results);
                   setVisible(false);
                   setPopularRestaurants(results);
                 }}
