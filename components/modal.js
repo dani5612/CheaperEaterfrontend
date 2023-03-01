@@ -107,15 +107,9 @@ const ModalView = ({
                 // All the fetch calls for getting the selected address details and then stting up the cookies and fetching popular restaurants
                 onPress={async () => {
                   const detailData = await detailLocation(addressArray[index]);
-                  console.log(detailData);
                   setAddress(detailData);
                   await setLocalStorage("address", detailData);
-                  console.log("Point 1");
-                  await setLocalStorage(
-                    "cookies",
-                    await setLocation(detailData)
-                  );
-                  console.log("Point 2");
+                  await setLocation(detailData);
                   const results = await popularPicks(
                     await getLocalStorage("cookies")
                   );

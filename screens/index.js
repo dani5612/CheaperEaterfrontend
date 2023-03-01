@@ -46,9 +46,7 @@ const Index = () => {
         storedAddress?.address?.address1 &&
         storedAddress?.address?.address1 !== "Set Location"
       ) {
-        setPopularRestaurants(
-          await popularPicks(await getLocalStorage("cookies"))
-        );
+        setPopularRestaurants(await popularPicks());
       }
     })();
   }, []);

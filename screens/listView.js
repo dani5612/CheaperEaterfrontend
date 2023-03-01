@@ -5,23 +5,17 @@ import { useEffect, useState } from "react";
 import { ListViewCard } from "../components/cards";
 import PageContainer from "../components/pageContainer";
 import { getBreakPoint } from "../utils/screen";
-import { getLocalStorage } from "../api/localStorage";
 import { search } from "../api/search";
 
 const ListView = ({ route }) => {
   const tailwind = useTailwind();
   const numColumns = { sm: 2, md: 3, lg: 4, xl: 5 };
   const window = useWindowDimensions();
-  const [searchResults, setSearchResults] = useState({
-    cookies: {},
-    data: [],
-  });
+  const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
     (async () => {
-      setSearchResults(
-        await search(route.params.searchStr, await getLocalStorage("cookies"))
-      );
+      setSearchResults(await search(route.params.searchStr));
     })();
   }, []);
 
@@ -57,9 +51,9 @@ const ListView = ({ route }) => {
           </View>
         </View>
       </View>
-      {searchResults.data.length != 0 ? (
+      {searchResults.length != 0 ? (
         <FlatList
-          data={searchResults.data[0].stores}
+          data={searchResults[0].stores}
           renderItem={({ item }) => {
             return (
               <View style={[tailwind("flex flex-1 ")]}>

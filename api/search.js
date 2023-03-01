@@ -1,3 +1,5 @@
+import { getLocalStorage, setLocalStorage } from "./localStorage";
+
 const API_DOMAIN = process.env.API_DOMAIN;
 const API_PORT = process.env.API_PORT;
 
@@ -7,18 +9,21 @@ const API_PORT = process.env.API_PORT;
  * @param {Object} cookies is a cookie object stored in the local storage when use set their location.
  * @returns an Array of JSON containing search results from all three serviced i.e. Postmates, Grubhub, and DoorDash.
  */
-const search = async (searchInput, cookies) => {
-  return await (
+const search = async (searchInput) => {
+  const cookies = await getLocalStorage("cookies");
+  const res = await (
     await fetch(`http://${API_DOMAIN}:${API_PORT}/api/search`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
       body: JSON.stringify({
         query: searchInput,
-        cookies: cookies.cookies,
+        cookies: (await getLocalStorage("cookies")).cookies,
       }),
     })
   ).json();
+  await setLocalStorage("cookies", { ...cookies, ...res.cookies });
+  return res.data;
 };
 
 export { search };
