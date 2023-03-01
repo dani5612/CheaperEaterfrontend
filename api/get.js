@@ -1,3 +1,5 @@
+import { getLocalStorage } from "./localStorage";
+
 const API_DOMAIN = process.env.API_DOMAIN;
 const API_PORT = process.env.API_PORT;
 
@@ -13,9 +15,7 @@ const popularPicks = async () => {
         "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify({
-        query: "",
-      }),
+      body: JSON.stringify(await getLocalStorage("cookies")),
     })
   ).json();
 };

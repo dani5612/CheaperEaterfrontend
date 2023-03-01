@@ -10,12 +10,12 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTailwind } from "tailwind-rn";
 import { autocompleteLocation } from "../api/autocomplete";
 import { detailLocation } from "../api/detail";
 import { setLocation } from "../api/set";
 import { popularPicks } from "../api/get";
+import { setLocalStorage } from "../api/localStorage";
 
 const ModalView = ({
   visible,
@@ -58,7 +58,8 @@ const ModalView = ({
             shadowRadius: 10,
             elevation: 5,
             maxHeight:
-              Platform.OS === "web" ? window.height * 0.6 : window.height * 0.5,
+              Platform.OS === "web" ? window.height * 0.6 : window.height * 0.4,
+            maxWidth: Platform.OS === "web" ? null : window.width * 0.99,
           }}
         >
           <View
@@ -106,15 +107,10 @@ const ModalView = ({
                 // All the fetch calls for getting the selected address details and then stting up the cookies and fetching popular restaurants
                 onPress={async () => {
                   const detailData = await detailLocation(addressArray[index]);
-                  console.log(detailData);
                   setAddress(detailData);
-                  await AsyncStorage.setItem(
-                    "address",
-                    JSON.stringify(detailData)
-                  ),
-                    await setLocation(detailData);
+                  await setLocalStorage("address", detailData);
+                  await setLocation(detailData);
                   const results = await popularPicks();
-                  console.log(results);
                   setVisible(false);
                   setPopularRestaurants(results);
                 }}

@@ -1,17 +1,26 @@
 import { Text, View, Image, FlatList, useWindowDimensions } from "react-native";
 import { useTailwind } from "tailwind-rn";
 import { faker } from "@faker-js/faker";
+import { useEffect, useState } from "react";
 import { ListViewCard } from "../components/cards";
 import PageContainer from "../components/pageContainer";
 import { getBreakPoint } from "../utils/screen";
+import { search } from "../api/search";
 
 const ListView = ({ route }) => {
   const tailwind = useTailwind();
   const numColumns = { sm: 2, md: 3, lg: 4, xl: 5 };
   const window = useWindowDimensions();
+  const [searchResults, setSearchResults] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      setSearchResults(await search(route.params.searchStr));
+    })();
+  }, []);
 
   return (
-    <PageContainer>
+    <PageContainer style={tailwind("m-2")}>
       <View>
         <View style={tailwind("flex flex-row justify-between")}>
           <View>
@@ -37,35 +46,39 @@ const ListView = ({ route }) => {
               source={require("../assets/icons/black/location.png")}
             />
             <Text style={tailwind("font-light ml-2")}>
-              {JSON.parse(localStorage.getItem("address")).address.address1}
+              {route.params.address}
             </Text>
           </View>
         </View>
       </View>
-      <FlatList
-        data={route.params.results[0].stores}
-        renderItem={({ item }) => {
-          return (
-            <View style={[tailwind("flex flex-1 ")]}>
-              <ListViewCard
-                style={tailwind("m-2")}
-                title={item.title}
-                image={item.image}
-                deliveryFee={item.deliveryFee}
-                deliveryTime={item.estimatedDeliveryTime}
-                rating={
-                  item.rating === null
-                    ? "No Ratings Found"
-                    : item.rating.toFixed(1)
-                }
-              />
-            </View>
-          );
-        }}
-        key={getBreakPoint(window.width)}
-        numColumns={numColumns[getBreakPoint(window.width)]}
-        keyExtractor={(item) => item.id}
-      />
+      {searchResults.length != 0 ? (
+        <FlatList
+          data={searchResults[0].stores}
+          renderItem={({ item }) => {
+            return (
+              <View style={[tailwind("flex flex-1 ")]}>
+                <ListViewCard
+                  style={tailwind("m-2")}
+                  title={item.title}
+                  image={item.image}
+                  deliveryFee={item.deliveryFee}
+                  deliveryTime={item.deliveryTime}
+                  rating={
+                    item.rating === null
+                      ? "No Ratings Found"
+                      : item.rating.toFixed(1)
+                  }
+                />
+              </View>
+            );
+          }}
+          key={getBreakPoint(window.width)}
+          numColumns={numColumns[getBreakPoint(window.width)]}
+          keyExtractor={(item) => item.id}
+        />
+      ) : (
+        <></>
+      )}
     </PageContainer>
   );
 };
