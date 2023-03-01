@@ -31,9 +31,10 @@ const FoodTypes = ({ closeFoodTypes }) => {
     { key: "Steak", logo: "🥩" },
   ];
   const openCategory = (item) => {
-    console.log(item);
     closeFoodTypes();
-    navigation.navigate("Search");
+    navigation.navigate("Search", {
+      searchStr: item,
+    });
   };
 
   const tailwind = useTailwind();

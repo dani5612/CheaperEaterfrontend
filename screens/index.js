@@ -161,7 +161,6 @@ const Index = () => {
               onSubmitEditing={async (e) => {
                 navigation.navigate("Search", {
                   searchStr: e.target.value,
-                  address: address?.address?.address1,
                 });
               }}
             />
