@@ -18,7 +18,7 @@ const search = async (searchInput) => {
       credentials: "include",
       body: JSON.stringify({
         query: searchInput,
-        cookies: (await getLocalStorage("cookies")).cookies,
+        cookies: cookies.cookies,
       }),
     })
   ).json();

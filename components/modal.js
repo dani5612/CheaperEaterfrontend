@@ -15,7 +15,7 @@ import { autocompleteLocation } from "../api/autocomplete";
 import { detailLocation } from "../api/detail";
 import { setLocation } from "../api/set";
 import { popularPicks } from "../api/get";
-import { getLocalStorage, setLocalStorage } from "../api/localStorage";
+import { setLocalStorage } from "../api/localStorage";
 
 const ModalView = ({
   visible,
@@ -110,9 +110,7 @@ const ModalView = ({
                   setAddress(detailData);
                   await setLocalStorage("address", detailData);
                   await setLocation(detailData);
-                  const results = await popularPicks(
-                    await getLocalStorage("cookies")
-                  );
+                  const results = await popularPicks();
                   setVisible(false);
                   setPopularRestaurants(results);
                 }}
