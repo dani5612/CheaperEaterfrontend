@@ -5,16 +5,16 @@ const ListViewCard = ({
   title,
   image,
   rating,
-  serviceFee,
-  foodPrice,
   deliveryFee,
   deliveryTime,
-  totalPrice,
+  props,
   style,
 }) => {
   const tailwind = useTailwind();
   return (
-    <View style={[tailwind("bg-white rounded-xl min-h-[320px]"), style]}>
+    <TouchableOpacity
+      style={[tailwind("bg-white rounded-xl min-h-[320px]"), style]}
+    >
       <View
         style={tailwind(
           "flex flex-row items-center text-white bg-black/40 absolute z-10 m-4 p-2.5 rounded-xl"
@@ -36,22 +36,21 @@ const ListViewCard = ({
       <View style={tailwind("flex flex-1 justify-between p-2")}>
         <Text style={tailwind("text-lg font-bold")}>{title}</Text>
         <View
-          style={tailwind(
-            "flex w-full flex-row justify-between pt-2 font-bold"
-          )}
+        // style={
+        //   tailwind(
+        //   "flex w-full flex-row justify-between pt-2 font-bold"
+        // )
+        // }
         >
-          <Text>Item price ${foodPrice} </Text>
-          <Text>Service fee ${serviceFee} </Text>
-          <Text>Total price ${totalPrice} </Text>
+          {props}
           <Text>Delivery Fee: ${deliveryFee}</Text>
           <Text>Delivery Time: {deliveryTime}</Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
-//Mayank Tamakuwala's Part start here
 const RestaurantCard = ({ title, image, style, rating, onPress }) => {
   const tailwind = useTailwind();
   return (
@@ -85,5 +84,4 @@ const RestaurantCard = ({ title, image, style, rating, onPress }) => {
     </TouchableOpacity>
   );
 };
-//Mayank Tamakuwala's Part ends here
 export { ListViewCard, RestaurantCard };

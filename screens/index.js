@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Text,
   View,
@@ -10,7 +9,6 @@ import {
   Platform,
   ImageBackground,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTailwind } from "tailwind-rn";
 import { faker } from "@faker-js/faker";
 import { useState, useEffect, useRef } from "react";
@@ -19,18 +17,18 @@ import PageContainer from "../components/pageContainer";
 import { RestaurantCard } from "../components/cards";
 import ModalView from "../components/modal";
 import { getBreakPoint } from "../utils/screen";
-import { search } from "../api/search";
 import { popularPicks } from "../api/get";
+import { getLocalStorage, setLocalStorage } from "../api/localStorage";
 import FoodTypes from "./foodTypes";
 
 const Index = () => {
   const navigation = useNavigation();
+  //saving location details to to the local storage of the website
   const tailwind = useTailwind();
-  const numColumns = { sm: 2, lg: 4, xl: 4 };
+  const numColumns = { sm: 2, md: 3, lg: 4, xl: 4 };
   const window = useWindowDimensions();
   const [visible, setVisible] = useState(false);
   const [address, setAddress] = useState({});
-  const [searchQuery, setSearchQuery] = useState("");
   const [popularRestaurants, setPopularRestaurants] = useState({ stores: [] });
 
   const [foodTypeScreen, showFoodTypeScreen] = useState(false);
@@ -55,14 +53,13 @@ const Index = () => {
 
   useEffect(() => {
     (async () => {
-      const storedAddress = JSON.parse(await AsyncStorage.getItem("address"));
+      const storedAddress = await getLocalStorage("address");
       setAddress(storedAddress);
 
       if (!storedAddress?.address?.address1) {
-        await AsyncStorage.setItem(
-          "address",
-          JSON.stringify({ address: { address1: "Set Location" } })
-        );
+        await setLocalStorage("address", {
+          address: { address1: "Set Location" },
+        });
       } else if (
         storedAddress?.address?.address1 &&
         storedAddress?.address?.address1 !== "Set Location"
@@ -73,18 +70,18 @@ const Index = () => {
   }, []);
 
   return (
-    <PageContainer style={tailwind("m-2")}>
+    <PageContainer>
       {/* Runs for the first time when the location hasn't been set by the cookies*/}
-      {console.log("Point 1")}
       {address?.address?.address1 === "Set Location" ||
       !address?.address?.address1 ? (
         <>
-          {console.log("Point 2")}
           <ImageBackground
-            style={{
-              flex: 1,
-              justifyContent: "center",
-            }}
+            style={[
+              {
+                flex: 1,
+                justifyContent: "center",
+              },
+            ]}
             source={require("../assets/background/background.png")}
           >
             <ModalView
@@ -96,7 +93,7 @@ const Index = () => {
           </ImageBackground>
         </>
       ) : (
-        <>
+        <View style={tailwind("m-2")}>
           <ModalView
             visible={visible}
             setVisible={setVisible}
@@ -106,8 +103,8 @@ const Index = () => {
 
           <View style={tailwind("flex flex-row justify-between")}>
             <View>
-              <Text style={tailwind("text-3xl font-bold")}>
-                Hey!! How are you doing? 🥘
+              <Text style={tailwind("text-2xl font-bold")}>
+                Give yourself a treat!🥘
               </Text>
             </View>
             <Image
@@ -161,14 +158,11 @@ const Index = () => {
                 padding: 10,
                 width: Platform.OS === "web" ? window.width / 2 : window.width,
               }}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-              }}
               onSubmitEditing={async (e) => {
                 navigation.navigate("Search", {
-                  results: await search(searchQuery),
+                  searchStr: e.target.value,
+                  address: address?.address?.address1,
                 });
-                e.target.value = "";
               }}
             />
           </View>
@@ -178,7 +172,7 @@ const Index = () => {
               <FoodTypes closeFoodTypes={() => showFoodTypeScreen(false)} />
             </View>
           ) : (
-            <View>
+            <View style={tailwind("flex")}>
               <View
                 style={[
                   tailwind("flex flex-row justify-between"),
@@ -231,7 +225,7 @@ const Index = () => {
               )}
             </View>
           )}
-        </>
+        </View>
       )}
     </PageContainer>
   );
