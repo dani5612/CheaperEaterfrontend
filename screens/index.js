@@ -18,38 +18,39 @@ import { RestaurantCard } from "../components/cards";
 import ModalView from "../components/modal";
 import { getBreakPoint } from "../utils/screen";
 import { search } from "../api/search";
-import FoodTypes from "./foodTypes";
+import FoodTypes from "../components/foodTypes";
 import { TouchableWithoutFeedback } from "react-native-web";
+import  SearchBar  from "../components/searchBar";
 
 const Index = () => {
   const navigation = useNavigation();
   //saving location details to to the local storage of the website
 
-  const foodTypeRef = useRef(null);
+  // const foodTypeRef = useRef(null);
 
-  const handlePressOutsideFoodType = () => {
+  // const handlePressOutsideFoodType = () => {
 
-    showFoodTypeScreen(false);
-    console.log("Clicked outside food type");
-  }
+  //   setFoodTyoesScreen(false);
+  //   console.log("Clicked outside food type");
+  // }
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    function handleClickOutsideFoodType  (event)  {
-      if (foodTypeRef.current && !foodTypeRef.current.contains(event.target)) {
-        handlePressOutsideFoodType();
-      } else {
-        console.log("Clicked inside food type");
-      }
-    };
+  //   function handleClickOutsideFoodType  (event)  {
+  //     if (foodTypeRef.current && !foodTypeRef.current.contains(event.target)) {
+  //       handlePressOutsideFoodType();
+  //     } else {
+  //       console.log("Clicked inside food type");
+  //     }
+  //   };
 
-    document.addEventListener("click", handleClickOutsideFoodType, true)
+  //   document.addEventListener("click", handleClickOutsideFoodType, true)
 
-    return () => {
-      document.removeEventListener("click", handleClickOutsideFoodType, true)
-    }
+  //   return () => {
+  //     document.removeEventListener("click", handleClickOutsideFoodType, true)
+  //   }
 
-  }, [foodTypeRef]);
+  // }, [foodTypeRef]);
 
   //const foodTypeRef = useRef(null);
 
@@ -66,10 +67,10 @@ const Index = () => {
   const [address, getAddress] = useState(
     JSON.parse(localStorage.getItem("address"))
   );
-  const [searchQuery, setSearchQuery] = useState("");
+  
   const [popularRestaurants, setPopularRestaurants] = useState({ stores: [] });
 
-  const [foodTypeScreen, showFoodTypeScreen] = useState(false);
+  const [isFoodTypesOpen, setFoodTyoesScreen] = useState(false);
 
   return (
     <PageContainer style={tailwind("m-2")}>
@@ -132,52 +133,17 @@ const Index = () => {
           </TouchableOpacity>
 
           <View style={tailwind("flex flex-row items-center")}>
-            {!foodTypeScreen ? (
-              <Image
-                style={tailwind("w-5 h-5")}
-                resizeMode="contain"
-                source={require("../assets/icons/black/search.png")}
-              />
-            ) : (
-              <TouchableOpacity onPress={() => showFoodTypeScreen(false)}>
-                <Image
-                  style={tailwind("w-5 h-5")}
-                  resizeMode="contain"
-                  source={require("../assets/icons/black/back.png")}
-                />
-              </TouchableOpacity>
-            )}
+            
 
-            <TextInput
-              placeholder="What would you like to eat?"
-              onFocus={() => showFoodTypeScreen(true)}
-              style={{
-                height: 40,
-                margin: 12,
-                borderLeftWidth: 1,
-                padding: 10,
-                width: Platform.OS === "web" ? window.width / 2 : window.width,
-              }}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-              }}
-              onSubmitEditing={async (e) => {
-                navigation.navigate("Search", {
-                  results: await search(searchQuery),
-                });
-                e.target.value = "";
-              }}
-            />
+            <SearchBar isFoodTypesOpen openFoodTypes = { () => setFoodTyoesScreen } />
+
           </View>
 
-          {foodTypeScreen ? (
-            <TouchableWithoutFeedback onPress = {handleClickOutsideFoodType} >
-              { foodTypeScreen && (
-              <View ref={foodTypeRef}>
-                <FoodTypes closeFoodTypes={() => showFoodTypeScreen(false)} />
+          {isFoodTypesOpen ? (
+            
+              <View >
+                <FoodTypes  closeFoodTypes={() => setFoodTyoesScreen} />
               </View>
-              )}
-            </TouchableWithoutFeedback>
           ) : (
             <View>
               <View
