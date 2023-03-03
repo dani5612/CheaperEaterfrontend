@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import {
   FlatList,
   Image,
@@ -16,6 +16,7 @@ import { detailLocation } from "../api/detail";
 import { setLocation } from "../api/set";
 import { popularPicks } from "../api/get";
 import { setLocalStorage } from "../api/localStorage";
+import { addressDetailsContext } from "../contexts/AddressContext";
 
 const ModalView = ({
   visible,
@@ -27,6 +28,7 @@ const ModalView = ({
   const window = useWindowDimensions();
   const [addressInput, setAddressInput] = useState("");
   const [addressArray, setAddressArray] = useState([]);
+  const AddressDetails = useContext(addressDetailsContext);
 
   // Fetch call to the backend to get the autocomplete location
   useEffect(() => {
@@ -108,6 +110,7 @@ const ModalView = ({
                 onPress={async () => {
                   const detailData = await detailLocation(addressArray[index]);
                   setAddress(detailData);
+                  AddressDetails[1](detailData);
                   await setLocalStorage("address", detailData);
                   await setLocation(detailData);
                   const results = await popularPicks();

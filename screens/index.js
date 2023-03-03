@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { useTailwind } from "tailwind-rn";
 import { faker } from "@faker-js/faker";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
 import PageContainer from "../components/pageContainer";
 import { RestaurantCard } from "../components/cards";
@@ -19,6 +19,7 @@ import ModalView from "../components/modal";
 import { getBreakPoint } from "../utils/screen";
 import { popularPicks } from "../api/get";
 import { getLocalStorage, setLocalStorage } from "../api/localStorage";
+import { addressDetailsContext } from "../contexts/AddressContext";
 import FoodTypes from "./foodTypes";
 
 const Index = () => {
@@ -34,7 +35,7 @@ const Index = () => {
   const [foodTypeScreen, showFoodTypeScreen] = useState(false);
   const foodTypesRef = useRef(null);
   const searchBarRef = useRef(null);
-
+  const addressDetails = useContext(addressDetailsContext);
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -125,7 +126,8 @@ const Index = () => {
                 source={require("../assets/icons/black/location.png")}
               />
               <Text style={tailwind("font-light ml-2")}>
-                {address?.address?.address1}
+                {/* {address?.address?.address1} */}
+                {addressDetails[0].address.address1}
               </Text>
             </TouchableOpacity>
           </View>
