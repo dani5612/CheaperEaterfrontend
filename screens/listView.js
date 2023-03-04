@@ -1,18 +1,19 @@
 import { Text, View, Image, FlatList, useWindowDimensions } from "react-native";
 import { useTailwind } from "tailwind-rn";
 import { faker } from "@faker-js/faker";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ListViewCard } from "../components/cards";
 import PageContainer from "../components/pageContainer";
 import { getBreakPoint } from "../utils/screen";
 import { search } from "../api/search";
+import { addressDetailsContext } from "../contexts/AddressContext";
 
 const ListView = ({ route }) => {
   const tailwind = useTailwind();
   const numColumns = { sm: 2, md: 3, lg: 4, xl: 5 };
   const window = useWindowDimensions();
   const [searchResults, setSearchResults] = useState([]);
-
+  const address = useContext(addressDetailsContext);
   useEffect(() => {
     (async () => {
       setSearchResults(await search(route.params.searchStr));
@@ -46,7 +47,7 @@ const ListView = ({ route }) => {
               source={require("../assets/icons/black/location.png")}
             />
             <Text style={tailwind("font-light ml-2")}>
-              {route.params.address}
+              {address[0].address.address1}
             </Text>
           </View>
         </View>
