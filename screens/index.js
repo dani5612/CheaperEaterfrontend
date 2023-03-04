@@ -18,7 +18,6 @@ import { RestaurantCard } from "../components/cards";
 import ModalView from "../components/modal";
 import { getBreakPoint } from "../utils/screen";
 import { popularPicks } from "../api/get";
-import { getLocalStorage, setLocalStorage } from "../api/localStorage";
 import { addressDetailsContext } from "../contexts/AddressContext";
 import FoodTypes from "./foodTypes";
 
@@ -29,13 +28,12 @@ const Index = () => {
   const numColumns = { sm: 2, md: 3, lg: 4, xl: 4 };
   const window = useWindowDimensions();
   const [visible, setVisible] = useState(false);
-  const [address, setAddress] = useState({});
   const [popularRestaurants, setPopularRestaurants] = useState({ stores: [] });
 
   const [foodTypeScreen, showFoodTypeScreen] = useState(false);
   const foodTypesRef = useRef(null);
   const searchBarRef = useRef(null);
-  const addressDetails = useContext(addressDetailsContext);
+  const address = useContext(addressDetailsContext);
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -54,16 +52,9 @@ const Index = () => {
 
   useEffect(() => {
     (async () => {
-      const storedAddress = await getLocalStorage("address");
-      setAddress(storedAddress);
-
-      if (!storedAddress?.address?.address1) {
-        await setLocalStorage("address", {
-          address: { address1: "Set Location" },
-        });
-      } else if (
-        storedAddress?.address?.address1 &&
-        storedAddress?.address?.address1 !== "Set Location"
+      if (
+        address[0]?.address?.address1 &&
+        address[0]?.address?.address1 !== "Set Location"
       ) {
         setPopularRestaurants(await popularPicks());
       }
@@ -73,8 +64,8 @@ const Index = () => {
   return (
     <PageContainer>
       {/* Runs for the first time when the location hasn't been set by the cookies*/}
-      {address?.address?.address1 === "Set Location" ||
-      !address?.address?.address1 ? (
+      {address[0]?.address?.address1 === "Set Location" ||
+      !address[0]?.address?.address1 ? (
         <>
           <ImageBackground
             style={[
@@ -88,7 +79,6 @@ const Index = () => {
             <ModalView
               visible={true}
               setVisible={setVisible}
-              setAddress={setAddress}
               setPopularRestaurants={setPopularRestaurants}
             />
           </ImageBackground>
@@ -98,7 +88,6 @@ const Index = () => {
           <ModalView
             visible={visible}
             setVisible={setVisible}
-            setAddress={setAddress}
             setPopularRestaurants={setPopularRestaurants}
           />
 
@@ -127,7 +116,7 @@ const Index = () => {
               />
               <Text style={tailwind("font-light ml-2")}>
                 {/* {address?.address?.address1} */}
-                {addressDetails[0].address.address1}
+                {address[0].address.address1}
               </Text>
             </TouchableOpacity>
           </View>

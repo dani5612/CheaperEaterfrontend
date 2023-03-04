@@ -18,17 +18,12 @@ import { popularPicks } from "../api/get";
 import { setLocalStorage } from "../api/localStorage";
 import { addressDetailsContext } from "../contexts/AddressContext";
 
-const ModalView = ({
-  visible,
-  setVisible,
-  setAddress,
-  setPopularRestaurants,
-}) => {
+const ModalView = ({ visible, setVisible, setPopularRestaurants }) => {
   const tailwind = useTailwind();
   const window = useWindowDimensions();
   const [addressInput, setAddressInput] = useState("");
   const [addressArray, setAddressArray] = useState([]);
-  const AddressDetails = useContext(addressDetailsContext);
+  const address = useContext(addressDetailsContext);
 
   // Fetch call to the backend to get the autocomplete location
   useEffect(() => {
@@ -109,8 +104,7 @@ const ModalView = ({
                 // All the fetch calls for getting the selected address details and then stting up the cookies and fetching popular restaurants
                 onPress={async () => {
                   const detailData = await detailLocation(addressArray[index]);
-                  setAddress(detailData);
-                  AddressDetails[1](detailData);
+                  address[1](detailData);
                   await setLocalStorage("address", detailData);
                   await setLocation(detailData);
                   const results = await popularPicks();

@@ -7,18 +7,15 @@ import PageContainer from "../components/pageContainer";
 import { getBreakPoint } from "../utils/screen";
 import { search } from "../api/search";
 import { addressDetailsContext } from "../contexts/AddressContext";
-// import { getLocalStorage } from "../api/localStorage";
 
 const ListView = ({ route }) => {
   const tailwind = useTailwind();
   const numColumns = { sm: 2, md: 3, lg: 4, xl: 5 };
   const window = useWindowDimensions();
   const [searchResults, setSearchResults] = useState([]);
-  const addressDetails = useContext(addressDetailsContext);
-  // const [storedAddress, setStoredAddress] = useState({address:{address1: "Set Location"}});
+  const address = useContext(addressDetailsContext);
   useEffect(() => {
     (async () => {
-      // setStoredAddress(await getLocalStorage("address"));
       setSearchResults(await search(route.params.searchStr));
     })();
   }, []);
@@ -50,8 +47,7 @@ const ListView = ({ route }) => {
               source={require("../assets/icons/black/location.png")}
             />
             <Text style={tailwind("font-light ml-2")}>
-              {addressDetails[0].address.address1}
-              {/* {storedAddress.address.address1} */}
+              {address[0].address.address1}
             </Text>
           </View>
         </View>
