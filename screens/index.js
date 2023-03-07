@@ -11,102 +11,98 @@ import {
 } from "react-native";
 import { useTailwind } from "tailwind-rn";
 import { faker } from "@faker-js/faker";
-import { useState, useEffect, useRef } from "react";
+
+import { useState, useEffect, useRef, useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
 import PageContainer from "../components/pageContainer";
 import { RestaurantCard } from "../components/cards";
 import ModalView from "../components/modal";
 import { getBreakPoint } from "../utils/screen";
+
 import { search } from "../api/search";
 import FoodTypes from "../components/foodTypes";
 import { TouchableWithoutFeedback } from "react-native-web";
 import  SearchBar  from "../components/searchBar";
+import { popularPicks } from "../api/get";
+import { addressDetailsContext } from "../contexts/AddressContext";
+
 
 const Index = () => {
   const navigation = useNavigation();
   //saving location details to to the local storage of the website
 
-  // const foodTypeRef = useRef(null);
-
-  // const handlePressOutsideFoodType = () => {
-
-  //   setFoodTyoesScreen(false);
-  //   console.log("Clicked outside food type");
-  // }
-
-  // useEffect(() => {
-
-  //   function handleClickOutsideFoodType  (event)  {
-  //     if (foodTypeRef.current && !foodTypeRef.current.contains(event.target)) {
-  //       handlePressOutsideFoodType();
-  //     } else {
-  //       console.log("Clicked inside food type");
-  //     }
-  //   };
-
-  //   document.addEventListener("click", handleClickOutsideFoodType, true)
-
-  //   return () => {
-  //     document.removeEventListener("click", handleClickOutsideFoodType, true)
-  //   }
-
-  // }, [foodTypeRef]);
-
-  //const foodTypeRef = useRef(null);
-
-  if (JSON.parse(localStorage.getItem("address") === null)) {
-    localStorage.setItem(
-      "address",
-      JSON.stringify({ address: { address1: "Set Location" } })
-    );
-  }
   const tailwind = useTailwind();
-  const numColumns = { sm: 2, lg: 4, xl: 4 };
+  const numColumns = { sm: 2, md: 3, lg: 4, xl: 4 };
   const window = useWindowDimensions();
   const [visible, setVisible] = useState(false);
-  const [address, getAddress] = useState(
-    JSON.parse(localStorage.getItem("address"))
-  );
-  
-  const [popularRestaurants, setPopularRestaurants] = useState({ stores: [] });
 
   const [isFoodTypesOpen, setFoodTyoesScreen] = useState(false);
 
+  const [popularRestaurants, setPopularRestaurants] = useState({ stores: [] });
+  const foodTypesRef = useRef(null);
+  const searchBarRef = useRef(null);
+  const address = useContext(addressDetailsContext);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        foodTypesRef.current &&
+        !foodTypesRef.current.contains(event.target) &&
+        !searchBarRef.current.isFocused()
+      ) {
+        showFoodTypeScreen(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside, true);
+    return () => {
+      document.removeEventListener("click", handleClickOutside, true);
+    };
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      if (
+        address[0]?.address?.address1 &&
+        address[0]?.address?.address1 !== "Set Location"
+      ) {
+        setPopularRestaurants(await popularPicks());
+      }
+    })();
+  }, []);
+
   return (
-    <PageContainer style={tailwind("m-2")}>
+    <PageContainer>
       {/* Runs for the first time when the location hasn't been set by the cookies*/}
-      {console.log("Point 1")}
-      {address.address.address1 === "Set Location" ? (
+      {address[0]?.address?.address1 === "Set Location" ||
+      !address[0]?.address?.address1 ? (
         <>
-          {console.log("Point 2")}
           <ImageBackground
-            style={{
-              flex: 1,
-              justifyContent: "center",
-            }}
+            style={[
+              {
+                flex: 1,
+                justifyContent: "center",
+              },
+            ]}
             source={require("../assets/background/background.png")}
           >
             <ModalView
               visible={true}
               setVisible={setVisible}
-              setAddress={getAddress}
               setPopularRestaurants={setPopularRestaurants}
             />
           </ImageBackground>
         </>
       ) : (
-        <>
+        <View style={tailwind("m-2")}>
           <ModalView
             visible={visible}
             setVisible={setVisible}
-            setAddress={getAddress}
             setPopularRestaurants={setPopularRestaurants}
           />
 
           <View style={tailwind("flex flex-row justify-between")}>
             <View>
-              <Text style={tailwind("text-3xl font-bold")}>
-                Hey!! How are you doing? 🥘
+              <Text style={tailwind("text-2xl font-bold")}>
+                Give yourself a treat!🥘
               </Text>
             </View>
             <Image
@@ -115,37 +111,37 @@ const Index = () => {
               source={{ uri: faker.image.avatar() }}
             />
           </View>
-          <TouchableOpacity
-            // Shows up the modal for the location setup when clicked on the location button
-            onPress={() => setVisible(true)}
-            style={tailwind("w-max")}
-          >
-            <View style={tailwind("flex flex-row rounded-full items-center")}>
+          <View style={tailwind("flex flex-row")}>
+            <TouchableOpacity
+              // Shows up the modal for the location setup when clicked on the location button
+              onPress={() => setVisible(true)}
+              style={tailwind("flex-row")}
+            >
               <Image
                 style={tailwind("w-4 h-4")}
                 resizeMode="contain"
                 source={require("../assets/icons/black/location.png")}
               />
               <Text style={tailwind("font-light ml-2")}>
-                {address.address.address1}
+                {/* {address?.address?.address1} */}
+                {address[0].address.address1}
               </Text>
-            </View>
-          </TouchableOpacity>
+            </TouchableOpacity>
+          </View>
 
           <View style={tailwind("flex flex-row items-center")}>
             
 
             <SearchBar isFoodTypesOpen openFoodTypes = { () => setFoodTyoesScreen } />
-
           </View>
 
           {isFoodTypesOpen ? (
             
-              <View >
+              <View ref={foodTypesRef} >
                 <FoodTypes  closeFoodTypes={() => setFoodTyoesScreen} />
               </View>
           ) : (
-            <View>
+            <View style={tailwind("flex")}>
               <View
                 style={[
                   tailwind("flex flex-row justify-between"),
@@ -167,7 +163,7 @@ const Index = () => {
                 </TouchableOpacity>
               </View>
               {/* Shows the popular restaurants in the area when the location is selected */}
-              {popularRestaurants.stores.length != 0 ? (
+              {popularRestaurants?.stores?.length != 0 ? (
                 <FlatList
                   data={popularRestaurants.stores}
                   renderItem={({ item }) => {
@@ -198,7 +194,7 @@ const Index = () => {
               )}
             </View>
           )}
-        </>
+        </View>
       )}
     </PageContainer>
   );

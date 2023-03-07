@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import {
   FlatList,
   Image,
@@ -15,17 +15,15 @@ import { autocompleteLocation } from "../api/autocomplete";
 import { detailLocation } from "../api/detail";
 import { setLocation } from "../api/set";
 import { popularPicks } from "../api/get";
+import { setLocalStorage } from "../api/localStorage";
+import { addressDetailsContext } from "../contexts/AddressContext";
 
-const ModalView = ({
-  visible,
-  setVisible,
-  setAddress,
-  setPopularRestaurants,
-}) => {
+const ModalView = ({ visible, setVisible, setPopularRestaurants }) => {
   const tailwind = useTailwind();
   const window = useWindowDimensions();
   const [addressInput, setAddressInput] = useState("");
   const [addressArray, setAddressArray] = useState([]);
+  const address = useContext(addressDetailsContext);
 
   // Fetch call to the backend to get the autocomplete location
   useEffect(() => {
@@ -57,7 +55,8 @@ const ModalView = ({
             shadowRadius: 10,
             elevation: 5,
             maxHeight:
-              Platform.OS === "web" ? window.height * 0.6 : window.height * 0.5,
+              Platform.OS === "web" ? window.height * 0.6 : window.height * 0.4,
+            maxWidth: Platform.OS === "web" ? null : window.width * 0.99,
           }}
         >
           <View
@@ -82,7 +81,7 @@ const ModalView = ({
               ]}
               placeholder="Enter delivery address"
               placeholderTextColor={"#ababab"}
-              onChange={(e) => setAddressInput(e.target.value)}
+              onChangeText={(text) => setAddressInput(text)}
             />
           </View>
           <FlatList
@@ -105,9 +104,9 @@ const ModalView = ({
                 // All the fetch calls for getting the selected address details and then stting up the cookies and fetching popular restaurants
                 onPress={async () => {
                   const detailData = await detailLocation(addressArray[index]);
-                  setAddress(detailData);
-                  localStorage.setItem("address", JSON.stringify(detailData)),
-                    await setLocation(detailData);
+                  address[1](detailData);
+                  await setLocalStorage("address", detailData);
+                  await setLocation(detailData);
                   const results = await popularPicks();
                   setVisible(false);
                   setPopularRestaurants(results);
