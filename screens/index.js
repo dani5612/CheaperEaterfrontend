@@ -1,3 +1,5 @@
+//Main screen made by Mayank, modified to add components by Victor Mendez
+
 import {
   Text,
   View,
@@ -130,9 +132,7 @@ const Index = () => {
           </View>
 
           <View style={tailwind("flex flex-row items-center")}>
-            
-
-            <SearchBar isFoodTypesOpen openFoodTypes = { () => setFoodTyoesScreen } />
+            <SearchBar isFoodTypesOpen={isFoodTypesOpen} openFoodTypes = {setFoodTyoesScreen} />
           </View>
 
           {isFoodTypesOpen ? (
