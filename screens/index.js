@@ -44,6 +44,7 @@ const Index = () => {
   const foodTypesRef = useRef(null);
   const searchBarRef = useRef(null);
   const address = useContext(addressDetailsContext);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (

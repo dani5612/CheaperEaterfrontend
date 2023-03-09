@@ -42,13 +42,8 @@ const FoodTypes = ({ closeFoodTypes }) => {
   const tailwind = useTailwind();
   return (
     <View style={tailwind("flex flex-1")}>
-      <View
-      // style={tailwind(
-      //   "flex flex-1 justify-between sm:justify-center sm:w-1/2 md:w-1/3 xl:w-1/5"
-      // )}
-      >
+      <View>
         {/* LIST OF CATEGORIES */}
-
         <View style={styles.container}>
           <Text
             style={{
